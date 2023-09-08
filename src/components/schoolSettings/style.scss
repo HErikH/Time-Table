@@ -1,0 +1,89 @@
+@use '../../index.scss' as *;
+@use '../../mixins.scss' as *;
+
+.school-settings {
+    @extend %modal-settings;
+    & > button {
+        top: 1px;
+        right: 2px;
+    }
+    &__schoolName-section, &__days-section {
+        display: flex;
+        align-items: center;
+        margin-top: 20px;
+        gap: 15px;
+        height: 150px;
+        padding: 1rem 1rem 1rem 1rem;
+        border: 2px outset;
+        border-radius: 5px;
+        .icon {
+            position:relative;
+            font-size: 80px;
+            color: #213458;
+            @include md {
+                display: none;
+            }
+        }
+        .text-block {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            @include md {
+            display: none;
+            }
+        }
+        .input-block {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            input {
+                padding-left: 5px;
+                outline: none;
+                &:nth-child(2) {
+                    width: 200px;
+                }
+            }
+            .wrapper {
+                display: flex;
+                gap: 5px;
+                input {
+                    width: 75%;
+                }
+            }
+            @include md {
+                width: 100%;
+            }
+        }
+    }
+    &__days-section {
+        .selection-block, .button-block {
+            display: flex;
+            margin-left: 20px;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .selection-block {
+            width: 190px;
+            select:not(:last-child) {
+                width: 39%;
+            }
+        }
+        .button-block {
+            margin-top: 15px;
+            align-self: flex-start;
+        }
+    }
+
+    .confirm-button-block {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        gap: 1rem;
+        margin-top: 1rem;
+        button {
+            width: 100%;
+            font-size: 0.9rem;
+        }
+    }
+}

@@ -1,0 +1,18 @@
+@use "../../index.scss" as *;
+
+.language-settings {
+  @extend %modal-settings;
+  & > button {
+    top: 1px;
+    right: 2px;
+  }
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    .flag-button {
+        width: 20%;
+        cursor: pointer;
+    }
+  }
+}

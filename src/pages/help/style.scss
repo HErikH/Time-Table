@@ -1,0 +1,18 @@
+@use '../../index.scss' as *;
+
+.help-navbar {
+    @extend %nav-panel;
+    &__item {
+        @extend %nav-item;
+        .icon {
+            color: #213458;
+            font-size: 25px;
+        }
+        .text {
+            font-size: 17px;
+        }
+        &:hover > .icon{
+            color: #41C9FF;
+        }
+    }
+}

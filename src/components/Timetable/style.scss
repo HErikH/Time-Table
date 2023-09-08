@@ -1,0 +1,23 @@
+.time-table {
+    border-collapse: collapse;   
+    margin: auto;
+    margin-top: 2rem;
+    box-shadow: 0 0 20px #213458;
+    thead tr {
+        text-align: center;
+        color: #ffffff;
+        background-color: #213458;
+        th {
+            padding: 12px 15px;
+        }
+    }
+
+    .per-days {
+        &__day {
+        border-left: 1px solid #EDC369;
+        border-right: 1px solid #EDC369;
+        width: 100px;
+        text-align: center;
+        }
+    }
+}

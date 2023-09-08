@@ -1,0 +1,51 @@
+// variables and templates
+
+%nav-panel {
+    display: flex;
+    justify-content: flex-end;
+    gap: 45px;
+    padding: 1rem 4rem 1rem 4rem;
+    box-shadow: 0 0 5px silver;
+    text-align: center;
+}
+
+%nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+%modal-settings {
+    max-width: 800px;
+    width: 80%;
+    padding: 2rem;
+    border-radius: 3px;
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    font-family: 'Bebas Neue', sans-serif;
+}
+
+// Global styles
+
+.OSstyle {
+    border: 1px solid #707070;
+    border-radius: 3px;
+    padding: 0 1rem 0 1rem;
+    background: linear-gradient(to bottom, #f2f2f2 0%, #ebebeb 42%, #dddddd 47%, #cfcfcf 100%);
+    transition: all 0.1s ease-in;
+    cursor: pointer;
+    &:hover {
+        background: #eaf6fd;
+        background: linear-gradient(to bottom, #eaf6fd 0%, #d9f0fc 42%, #bee6fd 47%, #bce5fc 58%, #a7d9f5 100%);
+    }
+}
+
+a:active {
+    color: initial;
+}

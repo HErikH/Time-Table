@@ -1,0 +1,57 @@
+@use '../../index.scss' as *;
+@use '../../mixins.scss' as *;
+
+.main-navbar {
+    @extend %nav-panel;
+    position: relative;
+    &__menu {
+        display: flex;
+        gap: 40px;
+        @include md {
+            display: none;
+            position: absolute;
+            flex-direction: column;
+            align-items: center;
+            padding: 1.5rem 0;
+            width: 100%;
+            top: 34px;
+            left: 0;
+            height: calc(100vh - 77px);
+            background-color: white;
+            border-top: 1px solid #213458;
+            &.expanded {
+                display: flex;
+            }
+        }
+    }
+    &__item {
+        @extend %nav-item;
+        .icon {
+            color: #213458;
+            font-size: 25px;
+        }
+        .text {
+            font-size: 1rem;
+        }
+        &:hover > .icon{
+            color: #EDC369;
+        }
+    }
+    .hamburger {
+        display: none;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 30px;
+        right: 25px;
+        color: #213458;
+        transition: color 0.2s ease-in-out;
+        cursor: pointer;
+        &:hover {
+            color: silver;
+        }
+        @include md {
+            display: block;
+        }
+    }
+}

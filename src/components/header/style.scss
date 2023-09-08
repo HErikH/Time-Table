@@ -1,0 +1,40 @@
+@use '../../mixins.scss' as *;
+
+.header {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    padding: 0 4rem 0 4rem;
+    background-color: #213458;
+    &__link-block {
+        display: flex;
+        width: 170px;
+        justify-content: space-between;
+        .header__link {
+            position: relative;
+            color: white;
+            transition: 250ms linear;
+            &:hover {
+            color: #EDC369;
+            }
+            &:hover::after {
+                transform: scaleX(1);
+                transform-origin: bottom left;
+            }
+            &::after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                transform: scaleX(0);
+                height: 2px;
+                bottom: -5px;
+                left: 0;
+                background-color: #AEB8C4;
+                transform-origin: bottom right;
+                transition: transform 0.25s ease-out;
+            }
+        }
+    }
+}

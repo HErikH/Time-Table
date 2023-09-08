@@ -1,0 +1,133 @@
+@use '../../index.scss' as *;
+@use '../../mixins.scss' as *;
+
+.classes-settings {
+    @extend %modal-settings;
+    & > button {
+        top: 1px;
+        right: 2px;
+    }
+    .container {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        .classes-list {
+            border-collapse: collapse;
+            margin: 0 auto;
+            min-width: 400px;
+            font-size: 0.9em;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            thead tr {
+                background-color: #009879;
+                color: #ffffff;
+                text-align: left;
+            }
+            tbody tr {
+                border-bottom: 1px solid #dddddd;
+                cursor: pointer;
+                &.selected-row {
+                    background-color: #00987a3b;
+                }
+            }
+            th, td {
+                padding: 12px 15px;
+            }
+        }
+        .right-sidebar {
+            display: flex;
+            float: right;
+            flex-direction: column;
+            width: 15%;
+            gap: 15px;
+            button {
+                display: flex;
+                align-items: center;
+                gap: 3px;
+                height: 25px;
+                @include md {
+                    width: 400px;
+                }
+                svg {
+                    font-size: 20px;
+                }
+            }
+            @include md {
+                width: 100%;
+                margin-top: 1rem;
+                align-items: center
+            }
+        }
+    }
+}
+
+.classes-action {
+    @extend %modal-settings;
+    width: 40%;
+    & > button {
+        top: 1px;
+        right: 2px;
+    }
+    .container {
+        margin: auto;
+        width: 80%;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        .text-block {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            @include md {
+                display: none;
+            }
+        }
+        .input-block {
+            width: 55%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            input {
+                padding-left: 5px;
+                outline: none;
+            }
+            @include md {
+                width: 100%;
+            }
+        }
+        .button-block {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            gap: 1rem;
+            margin-top: 1rem;
+            button {
+                width: 100%;
+                font-size: clamp(12px, 1vw, 20px);
+            }
+        }
+    }
+}
+
+.remove-classes {
+    width: 200px;
+    & > button {
+        top: 0;
+        right: 0;
+    }
+    .button-block {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        width: 100%;
+        gap: 1rem;
+        button {
+            width: 70%;
+        }
+    }
+}
+
+.class-created {
+    width: 400px;
+    text-align: center;
+    color: red;
+}

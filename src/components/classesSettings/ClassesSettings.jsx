@@ -32,7 +32,6 @@ let modalStates = {
   edit: false,
   remove: false,
   error: false,
-  remove: false
 }
 
 let initialValue = {

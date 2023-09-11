@@ -1,19 +1,17 @@
-import { useContext } from 'react'
+import { useSelector } from 'react-redux/es/exports'
 import { useTranslation } from 'react-i18next'
-import { TimeTableContext } from '../../context/TimeTableContext'
 import './style.scss'
 
 let weekDays = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
 
-
 function Timetable() {
-    let [state, setState] = useContext(TimeTableContext)
+    const table = useSelector(state => state.timeTable.table)
     let { t } = useTranslation()
 
     function createWeekDays() {
         let result = []
     
-        for (let i = 0; i < state.timeTable.numberOfDays; i++) {
+        for (let i = 0; i < table.numberOfDays; i++) {
             result.push(
                 <th key={i}>{t(weekDays[i].toLowerCase())}</th>
             )
@@ -25,10 +23,10 @@ function Timetable() {
     function createPeriodsPerDay() {
         let result = []
 
-        for (let i = 0; i < state.timeTable.numberOfDays; i++) {
+        for (let i = 0; i < table.numberOfDays; i++) {
             result.push(
                 <td className="per-days" key={i}>
-                    {[...Array(state.timeTable.periodsPerDay)].map((_, index) => {
+                    {[...Array(table.periodsPerDay)].map((_, index) => {
                         return <td className="per-days__day" key={index}>{index + 1}</td>
                     })}
                 </td>

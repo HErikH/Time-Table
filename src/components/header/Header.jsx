@@ -8,7 +8,7 @@ function Header() {
   return (
     <header className="header">
         <div className="header__link-block">
-        <Link to='/main' className='header__link'>{t('main')}</Link>
+        <Link to='/' className='header__link'>{t('main')}</Link>
         <Link to='/help' className='header__link'>{t('help')}</Link>
         </div>
     </header>

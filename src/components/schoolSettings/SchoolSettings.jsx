@@ -1,6 +1,6 @@
+import { changeTable } from "../../features/timTableSlice";
+import { useDispatch } from "react-redux";
 import { useImmer } from "use-immer";
-import { useContext } from 'react'
-import { TimeTableContext } from '../../context/TimeTableContext'
 import { Modal } from "react-responsive-modal";
 import { GiGreekTemple } from "react-icons/gi";
 import { LiaTableSolid } from "react-icons/lia";
@@ -33,14 +33,16 @@ let initialValue = {
 } 
 
 function SchoolSettings({ schoolModal, closeSchoolModal }) {
-  let [state, setState] = useContext(TimeTableContext)
   let [value, setValue] = useImmer(initialValue)
   let [contextValue, setContextValue] = useImmer({})
+  const dispatch = useDispatch()
+  
+  function passAction(action, payload) {
+    dispatch(action(payload))
+  }
 
   function setContext() {
-    setState((prev) => {
-      prev.timeTable = {...prev.timeTable, ...contextValue}
-    })
+    passAction(changeTable, contextValue)
     closeSchoolModal('school')
     setValue(initialValue)
     setContextValue({})

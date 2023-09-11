@@ -23,7 +23,7 @@ function Main() {
 
   function onClose(name, setSelected) {
     setModal({...modal, [name]: false});
-    setSelected(false);
+    setSelected && setSelected(false);
   }
 
   function onOpen(name) {

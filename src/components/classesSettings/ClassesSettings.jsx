@@ -1,7 +1,7 @@
-import { useContext } from 'react'
+import { addClass, editClass, removeClass } from '../../features/timTableSlice';
+import { useSelector, useDispatch } from 'react-redux/es/exports'
 import { useImmer } from 'use-immer';
 import { useState } from "react";
-import { TimeTableContext } from '../../context/TimeTableContext'
 import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
 import { BiPlusCircle } from "react-icons/bi";
@@ -40,10 +40,16 @@ let initialValue = {
 }
 
 function ClassesSettings({ classesModal, closeClassesModal }) {
-  let [state, setState] = useContext(TimeTableContext)
+  const classes = useSelector(state => state.timeTable.classes)
+  const dispatch = useDispatch()
+
   let [modal, setModal] = useState(modalStates);
   let [value, setValue] = useImmer(initialValue);
   let [selected, setSelected] = useState(false)
+  
+  function passAction(action, payload) {
+    dispatch(action(payload))
+  }
 
   function onOpen(name) {
     name = name.toLowerCase();
@@ -62,32 +68,27 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
   }
 
   function setContext(name) {
-    if (name == 'new' && state.classes[value.className]) {
+    if (name == 'new' && classes[value.className]) {
       onOpen('error')
       return
     } else if (name == 'edit') {
-      setState((prev) => {
-        prev.classes[selected[0]] = {
-           className: value.className, 
-           short: value.short 
-        }}) 
+      if (classes[value.className]) {
+      onOpen('error')
+      return
+      }
+      passAction(editClass, {selected: selected[0], data: value})
       onClose(name)
       return
     } else if (name == 'remove') {
-      setState(prev => {delete prev.classes[selected[0]]}) 
+      passAction(removeClass, selected[0])
       setSelected(false)
       onClose(name)
       return
+    } else {
+      passAction(addClass, value)
+      setSelected(false)
+      onClose(name)
     }
-
-    setState((prev) => {
-      prev.classes[value.className] = {
-         className: value.className, 
-         short: value.short 
-    }})
-
-    setSelected(false)
-    onClose(name)
   }
 
   return (
@@ -108,7 +109,7 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
               </tr>
             </thead>
             <tbody>
-            {Object.entries(state.classes).map((item) => {
+            {Object.entries(classes).map((item) => {
               return (
               <tr 
               className={selected[0] == item[0] ? 'selected-row' : ''} 

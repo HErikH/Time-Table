@@ -8,6 +8,7 @@ import { GiGreekTemple, GiHamburgerMenu } from "react-icons/gi";
 import SchoolSettings from "../../components/schoolSettings/SchoolSettings";
 import ClassesSettings from "../../components/classesSettings/ClassesSettings";
 import "./style.scss";
+import TeachersSettings from "../../components/teachersSettings/TeachersSettings";
 
 let navItems = [
   {icon: <PiNotebook className="icon" />, linkClass: 'main-navbar__item', text: 'subjects'},
@@ -17,7 +18,7 @@ let navItems = [
 ]
 
 function Main() {
-  let [modal, setModal] = useState({ school: false, classes: false });
+  let [modal, setModal] = useState({ school: false, classes: false, teachers: false });
   const [isNavExpanded, setIsNavExpanded] = useState(false)
   const { t } = useTranslation();
 
@@ -46,6 +47,7 @@ function Main() {
       <GiHamburgerMenu className="hamburger" onClick={()=>setIsNavExpanded(!isNavExpanded)} />
     </nav>
     <SchoolSettings schoolModal={modal.school} closeSchoolModal={onClose}/>
+    <TeachersSettings teachersModal={modal.teachers} closeTeachersModal={onClose}/>
     <ClassesSettings classesModal={modal.classes} closeClassesModal={onClose}/>
     </>
   );

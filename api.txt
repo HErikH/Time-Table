@@ -1,0 +1,13 @@
+http://localhost:4000/table/read
+http://localhost:4000/update/hours - data {
+    tableId,
+    newHoursCount,
+}
+http://localhost:4000/update/days - data {
+    tableId,
+    daysCount,
+}
+http://localhost:4000/update/days - data {
+    tableId,
+    daysCount,
+}

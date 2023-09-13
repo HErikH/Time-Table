@@ -188,13 +188,14 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
       </Modal>
           
       <Modal 
-      classNames={{modal: 'class-created'}} 
+      classNames={{modal: 'class-exists'}} 
       open={modal.error} 
       onClose={()=>onClose('error')} 
       center
       >
         The class already exists !
       </Modal>
+      <div className="bxdo"></div>
     </>
   );
 }

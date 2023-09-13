@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 
 let initialState = {
     classes: {
@@ -10,8 +10,6 @@ let initialState = {
       nameOfSchool: "161",
       year: "2023/2024",
       registrationName: "161r",
-      periodsPerDay: 3,
-      numberOfDays: 2,
       weekend: "Saturday - Sunday",
    }
 };
@@ -20,8 +18,14 @@ const timeTableSlice = createSlice({
     name: 'timTable',
     initialState,
     reducers: {
-        changeTable(state, {payload}) {
+        getTimeTableApi(state, {payload}) {
+          payload.weekDays = JSON.parse(payload.weekDays)
           state.table = {...state.table, ...payload}
+          console.log(current(state))
+        },
+
+        changeTable(state, {payload}) {
+          state.table = {...state.table, weekDays: {...state.table.weekDays}}
         },
 
         addClass(state, {payload}) {
@@ -42,5 +46,5 @@ const timeTableSlice = createSlice({
     },
 })
 
-export const { changeTable, addClass, editClass, removeClass } = timeTableSlice.actions; 
+export const { changeTable, addClass, editClass, removeClass, getTimeTableApi } = timeTableSlice.actions; 
 export default timeTableSlice.reducer;

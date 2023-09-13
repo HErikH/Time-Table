@@ -1,7 +1,7 @@
 @use '../../index.scss' as *;
 @use '../../mixins.scss' as *;
 
-.classes-settings {
+.teachers-settings {
     @extend %modal-settings;
     & > button {
         top: 1px;
@@ -11,7 +11,7 @@
         display: flex;
         justify-content: space-between;
         flex-wrap: wrap;
-        .classes-list {
+        .teachers-list {
             border-collapse: collapse;
             margin: 0 auto;
             min-width: 400px;
@@ -37,7 +37,7 @@
             display: flex;
             float: right;
             flex-direction: column;
-            width: 15%;
+            // width: 15%;
             gap: 15px;
             button {
                 display: flex;
@@ -60,7 +60,7 @@
     }
 }
 
-.classes-action {
+.teachers-action {
     @extend %modal-settings;
     width: 40%;
     & > button {
@@ -108,7 +108,7 @@
     }
 }
 
-.remove-classes {
+.remove-teachers {
     width: 200px;
     & > button {
         top: 0;
@@ -125,11 +125,3 @@
         }
     }
 }
-
-.class-exists {
-    width: 400px;
-    text-align: center;
-    color: red;
-}
-
-

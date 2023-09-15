@@ -1,4 +1,4 @@
-import { changeTable } from "../../features/timTableSlice";
+import { updateTable } from "../../features/timTableSlice";
 import { useDispatch } from "react-redux";
 import { useImmer } from "use-immer";
 import { Modal } from "react-responsive-modal";
@@ -24,12 +24,12 @@ function selectionOptions(info) {
 }
 
 let initialValue = {
-  nameOfSchool: '',
+  name: '',
   year: '',
-  registrationName: '',
-  periodsPerDay: 1,
-  numberOfDays: 1,
-  weekend: 'Saturday - Sunday'
+  // registrationName: '',
+  hours: 1,
+  days: 1,
+  // weekend: 'Saturday - Sunday'
 } 
 
 function SchoolSettings({ schoolModal, closeSchoolModal }) {
@@ -42,7 +42,7 @@ function SchoolSettings({ schoolModal, closeSchoolModal }) {
   }
 
   function setContext() {
-    passAction(changeTable, contextValue)
+    passAction(updateTable, contextValue)
     closeSchoolModal('school')
     setValue(initialValue)
     setContextValue({})
@@ -67,7 +67,7 @@ function SchoolSettings({ schoolModal, closeSchoolModal }) {
     <Modal
       classNames={{ modal: "school-settings" }}
       open={schoolModal}
-      onClose={() => closeSchoolModal('school')}
+      onClose={onClose}
       center
     >
       <section className="school-settings__schoolName-section">
@@ -75,15 +75,15 @@ function SchoolSettings({ schoolModal, closeSchoolModal }) {
         <div className="text-block">
           <label>Name of school:</label>
           <label>Academic year:</label>
-          <label>Registration name:</label>
+          {/* <label>Registration name:</label> */}
         </div>
         <div className="input-block">
-          <input value={value.nameOfSchool} onChange={onSet} name="nameOfSchool" type="text" placeholder="Name of school"/>
+          <input value={value.name} onChange={onSet} name="name" type="text" placeholder="Name of school"/>
           <input value={value.year} onChange={onSet} name="year" type="text" placeholder="Academic year 2023/2024" />
-          <div className="wrapper">
-            <input value={value.registrationName} onChange={onSet} name="registrationName" type="text" placeholder="Registration name"/>
-            <button className="OSstyle">Change</button>
-          </div>
+          {/* <div className="wrapper"> */}
+            {/* <input value={value.registrationName} onChange={onSet} name="registrationName" type="text" placeholder="Registration name"/> */}
+            {/* <button className="OSstyle">Change</button> */}
+          {/* </div> */}
         </div>
       </section>
 
@@ -92,18 +92,18 @@ function SchoolSettings({ schoolModal, closeSchoolModal }) {
         <div className="text-block">
           <label>Periods per day:</label>
           <label>Number of days:</label>
-          <label>Weekend:</label>
+          {/* <label>Weekend:</label> */}
         </div>
         <div className="selection-block">
-          <select value={value.periodsPerDay} onChange={onSet} className="OSstyle" name="periodsPerDay">
+          <select value={value.hours} onChange={onSet} className="OSstyle" name="hours">
             {selectionOptions(31)}
           </select>
-          <select value={value.numberOfDays} onChange={onSet} className="OSstyle" name="numberOfDays">
+          <select value={value.days} onChange={onSet} className="OSstyle" name="days">
             {selectionOptions(10)}
           </select>
-          <select value={value.weekend} onChange={onSet} className="OSstyle" name="weekend">
+          {/* <select value={value.weekend} onChange={onSet} className="OSstyle" name="weekend">
             {selectionOptions(['Saturday - Sunday', 'Friday - Saturday', 'Thursday - Friday'])}
-          </select>
+          </select> */}
         </div>
         <div className="button-block">
           <button className="OSstyle">Bell Times/Rename periods</button>

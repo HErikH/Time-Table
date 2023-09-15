@@ -1,10 +1,9 @@
-.time-table {
-    border-collapse: collapse;   
+.time-table { 
     margin: auto;
     margin-top: 2rem;
     box-shadow: 0 0 20px #213458;
     thead tr {
-        text-align: center;
+        text-align: center;     
         color: #ffffff;
         background-color: #213458;
         th {
@@ -13,11 +12,9 @@
     }
 
     .per-days {
-        border-bottom: 1px solid #EDC369;
-        &__day {
-        border-left: 1px solid #EDC369;
-        border-right: 1px solid #EDC369;
+        &__hour {
         width: 100px;
+        border: 1px solid #00739a;
         text-align: center;
         }
     }

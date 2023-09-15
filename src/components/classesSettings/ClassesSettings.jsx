@@ -1,4 +1,4 @@
-import { addClass, editClass, removeClass } from '../../features/timTableSlice';
+import { addClass, editClass, deleteClass } from '../../features/classesSlice';
 import { useSelector, useDispatch } from 'react-redux/es/exports'
 import { useImmer } from 'use-immer';
 import { useState } from "react";
@@ -23,24 +23,24 @@ let buttonData = [
   {
     icon: <MdOutlineRemoveCircleOutline style={{ fill: "red" }} />,
     className: "OSstyle",
-    text: "Remove",
+    text: "Delete",
   },
 ];
 
 let modalStates = {
   new: false,
   edit: false,
-  remove: false,
+  delete: false,
   error: false,
 }
 
 let initialValue = {
-    className: '', 
-    short: ''
+  longName: '', 
+  shortName: ''
 }
 
 function ClassesSettings({ classesModal, closeClassesModal }) {
-  const classes = useSelector(state => state.timeTable.classes)
+  const classes = useSelector(state => state.classes)
   const dispatch = useDispatch()
 
   let [modal, setModal] = useState(modalStates);
@@ -58,6 +58,7 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
 
   function onClose(name) {
     setModal({ ...modal, [name]: false });
+    setSelected(false)
     setValue(initialValue)
   }
 
@@ -68,26 +69,34 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
   }
 
   function setContext(name) {
-    if (name == 'new' && classes[value.className]) {
-      onOpen('error')
-      return
-    } else if (name == 'edit') {
-      if (classes[value.className]) {
-      onOpen('error')
-      return
+    if (name == 'new') {
+      for (const key in classes) {
+        if (classes[key].longName == value.longName) {          
+          onOpen('error')
+          return
+        } else {
+          passAction(addClass, value)
+          onClose(name)
+          return
+        }
       }
-      passAction(editClass, {selected: selected[0], data: value})
-      onClose(name)
-      return
-    } else if (name == 'remove') {
-      passAction(removeClass, selected[0])
-      setSelected(false)
+    } else if (name == 'edit') {
+      for (const key in classes) {
+        if (classes[key].longName == value.longName) {          
+          onOpen('error')
+          return
+        } else {
+          passAction(editClass, {classId: selected[0], data: value})
+          onClose(name)
+          return
+        }
+      }
+    } else if (name == 'delete') {
+      passAction(deleteClass, selected[0])
       onClose(name)
       return
     } else {
-      passAction(addClass, value)
-      setSelected(false)
-      onClose(name)
+      return
     }
   }
 
@@ -103,7 +112,7 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
           <table className='classes-list'>
             <thead>
               <tr>
-              {['Name','Short','Count','Time off'].map((item) => {
+              {['Name','Short-Name','Count','Time off'].map((item) => {
                   return <th key={item}>{item}</th>
               })}
               </tr>
@@ -116,8 +125,8 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
               key={item[0]} 
               onClick={() => setSelected(item)}
               >
-                <td>{item[1].className}</td>
-                <td>{item[1].short}</td>
+                <td>{item[1].longName}</td>
+                <td>{item[1].shortName}</td>
                 <td></td>
                 <td></td>
               </tr>
@@ -150,11 +159,11 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
         <div className="container">
         <div className="text-block">
           <label>Class name:</label>
-          <label>Short:</label>
+          <label>Short name:</label>
         </div>
         <div className="input-block">
-          <input name='className' value={value.className} onChange={onSet} type="text" placeholder="Class name"/>
-          <input name='short' value={value.short} onChange={onSet} type="text" placeholder="Short"/>
+          <input name='longName' value={value.longName} onChange={onSet} type="text" placeholder="Class name"/>
+          <input name='shortName' value={value.shortName} onChange={onSet} type="text" placeholder="Short name"/>
         </div>
         <div className="button-block">
           <button className="OSstyle" onClick={()=>setContext('new')}>OK</button>
@@ -170,8 +179,8 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
           <label>Short:</label>
         </div>
         <div className="input-block">
-          <input name='className' value={value.className} onChange={onSet} type="text" placeholder="Class name"/>
-          <input name='short' value={value.short} onChange={onSet} type="text" placeholder="Short"/>
+          <input name='longName' value={value.longName} onChange={onSet} type="text" placeholder="Class name"/>
+          <input name='shortName' value={value.shortName} onChange={onSet} type="text" placeholder="Short"/>
         </div>
         <div className="button-block">
           <button className="OSstyle" onClick={()=>setContext('edit')}>OK</button>
@@ -180,10 +189,10 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
         </div>
       </Modal>
 
-      <Modal classNames={{modal: 'remove-classes'}} open={modal.remove} onClose={() => onClose("remove")} center>
+      <Modal classNames={{modal: 'delete-class'}} open={modal.delete} onClose={() => onClose("delete")} center>
         <div className="button-block">
-          <button className="OSstyle" onClick={()=>setContext('remove')}>Confirm</button>
-          <button className="OSstyle" onClick={()=>onClose('remove')}>Cancel</button>
+          <button className="OSstyle" onClick={()=>setContext('delete')}>Confirm</button>
+          <button className="OSstyle" onClick={()=>onClose('delete')}>Cancel</button>
         </div>
       </Modal>
           
@@ -195,7 +204,6 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
       >
         The class already exists !
       </Modal>
-      <div className="bxdo"></div>
     </>
   );
 }

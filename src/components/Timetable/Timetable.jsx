@@ -3,21 +3,7 @@ import { useTranslation } from 'react-i18next'
 import './style.scss'
 
 function Timetable() {
-    const table = useSelector(state => state.timeTable.table.weekDays)
-
-    // function test(days=5, hours=7) {
-    //     let arr = {}
-    //     let weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-    //     for (let i = 0; i < days; i++) {
-    //         arr[i+1] = {dayId: i+1, name: weekDays[i], hours: {}}
-    //         for (let j = 0; j < hours; j++) {
-    //             arr[i+1].hours[j+1] = {hourId: j+1, name: j+1, shortName: j+1}
-    //         }
-    //     }
-    //     return arr
-    // }
-    // console.log(test())
-
+    const table = useSelector(state => state.timeTable.weekDays)
     let { t } = useTranslation()
 
     function createWeekDays() {
@@ -39,7 +25,7 @@ function Timetable() {
             result.push(
               <td key={table[item].dayId} className="per-days">
               {Object.values(table[item].hours).map(h => {
-                  return <td key={h.hourId} className="per-days__day">{h.name}</td>
+                  return <td key={h.hourId} className="per-days__hour">{h.name}</td>
                 })}
               </td>
             )
@@ -52,14 +38,15 @@ function Timetable() {
     <table className="time-table">
         <thead>
             <tr>
-                <th style={{backgroundColor: 'white', borderRight: '1px solid #EDC369'}}></th>
+                <th style={{backgroundColor: 'white',}}></th>
                 {createWeekDays()}
             </tr>
         </thead>
 
         <tbody>
             <tr>
-                <td style={{width: '50px', borderBottom: '1px solid #EDC369'}}></td>
+                <td style={{width: '50px', textAlign: 'center', border: '1px solid #00739a'}}>             
+                </td>
                 {createPeriodsPerDay()}
             </tr>
         </tbody>

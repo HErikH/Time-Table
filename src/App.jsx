@@ -1,8 +1,7 @@
 import { Routes, Route } from "react-router-dom";
-import { useImmer } from "use-immer";
 import { useEffect } from "react";
-import { getTimeTableApi } from "./features/timTableSlice";
-import { fetchDataFromApi } from "./utils/api";
+import { fetchTable } from "./features/timTableSlice";
+import { getClasses } from "./features/classesSlice";
 import { useDispatch } from "react-redux";
 import Header from './components/header/Header'
 import Timetable from "./components/Timetable/Timetable";
@@ -10,15 +9,19 @@ import Main from "./pages/main/Main";
 import Help from "./pages/help/Help";
 import './App.scss'
 
+import { fetchDataFromApi } from "./utils/api";
+
 function App() {
   let dispatch = useDispatch()
 
   useEffect(() => {
-    async function fetchTable() {
-      let { data: {table} } = await fetchDataFromApi('table/read', { tableId: 1 }, 'post')
-      dispatch(getTimeTableApi(table))
+    async function initialFetch() {
+      await dispatch(fetchTable())
+      dispatch(getClasses())
     }
-    fetchTable();
+    initialFetch()
+    // fetchDataFromApi('table/create')
+    // fetchDataFromApi('classes/create', {tableId: 1, longName: 162, shortName: '162short'},'post')
   }, [])
 
   return (

@@ -1,50 +1,71 @@
-import { createSlice, current } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
+import { fetchDataFromApi } from '../utils/api.js'
 
 let initialState = {
-    classes: {
-      161: {className: 161, short: '161short'},
-      162: {className: 162, short: '162short'},
-      163: {className: 163, short: '163short'},
-    },
-    table: {
-      nameOfSchool: "161",
-      year: "2023/2024",
-      registrationName: "161r",
-      weekend: "Saturday - Sunday",
-   }
+    // nameOfSchool: "161",
+    // year: "2023/2024",
+    // registrationName: "161r",
+    // weekend: "Saturday - Sunday",
 };
+
+// Async reducers
+
+export const fetchTable = createAsyncThunk(
+  'timTable/fetchTable',
+  async function() {
+    const { data: { table } } = await fetchDataFromApi('table/read',{tableId: 1},'post')
+    return table
+  }
+)
+
+export const updateTable = createAsyncThunk(
+  'timeTable/updateTable',
+  async function(payload) {
+    let promises = [], infoKey = null, count = 0 
+
+    for (const key in payload) {
+      if (payload[key]) {
+        switch(key) {
+          case 'days':
+            count = 'daysCount'
+            break
+          case 'hours':
+            count = 'newHoursCount'
+            break
+          case 'name':
+          case 'year':
+            infoKey = 'info'
+            break
+        }
+
+        const result = await fetchDataFromApi(
+          "settings/update/" + (infoKey ? infoKey : key),
+          {tableId: 1,[count ? count : key]: payload[key]},
+          'post'
+        )
+        promises.push(result)
+      }
+    }
+
+    let result = await Promise.all(promises)
+    return result.at(-1).data.table
+   }
+)
 
 const timeTableSlice = createSlice({
     name: 'timTable',
     initialState,
-    reducers: {
-        getTimeTableApi(state, {payload}) {
-          payload.weekDays = JSON.parse(payload.weekDays)
-          state.table = {...state.table, ...payload}
-          console.log(current(state))
-        },
-
-        changeTable(state, {payload}) {
-          state.table = {...state.table, weekDays: {...state.table.weekDays}}
-        },
-
-        addClass(state, {payload}) {
-          state.classes[payload.className] = payload
-        },
-
-        editClass(state, {payload}) {
-          for (const key in payload.data) {
-            if (payload.data[key]) {
-              state.classes[payload.selected][key] = payload.data[key]
-            }
-          }
-        },
-        
-        removeClass(state, {payload}) {
-          delete state.classes[payload]
-        }
-    },
+    reducers: {},
+    extraReducers: (builder) => {
+      builder.addCase(fetchTable.fulfilled, (_, {payload}) => {
+        payload.weekDays = JSON.parse(payload.weekDays)
+        return payload
+      })
+      builder.addCase(updateTable.fulfilled, (_, {payload}) => {
+        payload.weekDays = JSON.parse(payload.weekDays)
+        return payload
+      })
+    }
 })
 
-export const { changeTable, addClass, editClass, removeClass, getTimeTableApi } = timeTableSlice.actions; 
 export default timeTableSlice.reducer;

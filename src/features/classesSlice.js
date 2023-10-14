@@ -9,7 +9,8 @@ let initialState = {}
 export const getClasses = createAsyncThunk(
     'classes/fetchClasses',
     async function(_, {getState}) {
-        return JSON.parse(getState().timeTable.classes)
+        let result = await getState().timeTable.classes
+        return JSON.parse(result)
    }
 )
 
@@ -20,6 +21,7 @@ export const addClass = createAsyncThunk(
         return JSON.parse(response.data.table.classes)
     }
 ) 
+
 export const editClass = createAsyncThunk(
     'classes/editClass',
     async function(payload) {
@@ -30,6 +32,7 @@ export const editClass = createAsyncThunk(
         return JSON.parse(response.data.table.classes)
     }
 ) 
+
 export const deleteClass = createAsyncThunk(
     'classes/deleteClass',
     async function(payload) {

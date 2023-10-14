@@ -1,3 +1,7 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css2?family=PT+Serif&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap');
+
 // variables and templates
 
 %nav-panel {
@@ -22,18 +26,40 @@
     border-radius: 3px;
 }
 
+%table-list {
+    border-collapse: collapse;
+    margin: 0 auto;
+    min-width: 400px;
+    font-size: 0.9em;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    thead tr {
+        background-color: #009879;
+        color: #ffffff;
+        text-align: left;
+    }
+    tbody tr {
+        border-bottom: 1px solid #dddddd;
+        cursor: pointer;
+        &.selected-row {
+            background-color: #00987a3b;
+        }
+    }
+    th, td {
+        padding: 12px 15px;
+    }
+}
+// Global styles
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     text-decoration: none;
-    font-family: 'Bebas Neue', sans-serif;
+    font-family: 'Courier Prime', monospace;
 }
 
-// Global styles
-
 .OSstyle {
+    height: 30px;
     border: 1px solid #707070;
     border-radius: 3px;
     padding: 0 1rem 0 1rem;
@@ -44,6 +70,10 @@
         background: #eaf6fd;
         background: linear-gradient(to bottom, #eaf6fd 0%, #d9f0fc 42%, #bee6fd 47%, #bce5fc 58%, #a7d9f5 100%);
     }
+}
+
+a {
+    color: #213458;
 }
 
 a:active {

@@ -1,0 +1,47 @@
+@use "../../../index.scss" as *;
+@use "../../../mixins.scss" as *;
+
+.stacks-section {
+  display: flex;
+  width: 100%;
+  &__stacks {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 150px;
+    gap: 50px;
+    padding: 1rem 1rem;
+    background-color: #ceced3;
+    .stack {
+      .subject {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        background-color: red;
+        border: 1px solid silver;
+        box-shadow: 2px 2px 0px hsl(0, 0%, 30%), 
+        4px 4px 0px hsl(0, 0%, 60%),
+        6px 6px 0px hsl(0, 0%, 100%);
+        cursor: pointer;
+      }
+    }
+  }
+  &__review {
+    width: 40%;
+    padding: 1rem 1rem;
+    background-color: #797990;
+    .subject-block {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1rem;
+      .subject {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        background-color: red;
+        border: 1px solid silver;
+      }
+    }
+  }
+}

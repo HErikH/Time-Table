@@ -1,0 +1,99 @@
+@use '../../../../index.scss' as *;
+@use '../../../../mixins.scss' as *;
+
+.lessons-settings {
+    @extend %modal-settings;
+    width: 600px;
+    & > button {
+        top: 1px;
+        right: 2px;
+    }
+    .container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    .lessons-list {
+        @extend %table-list
+    }
+    .button-block {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        width: 100%;
+        gap: 1rem;
+        margin-top: 1rem;
+        button {
+            // width: 100%;
+            text-align: center;
+            font-size: clamp(12px, 1vw, 20px);
+        }
+    }
+  }
+}
+
+.lessons-action {
+    @extend %modal-settings;
+    width: 40%;
+    & > button {
+        top: 1px;
+        right: 2px;
+    }
+    .container {
+        display: flex;
+        flex-direction: column;
+        width: 80%;
+        margin: auto;
+        .selection-block {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            select {
+                width: 150px;
+                margin-left: 1rem;
+            }
+            @include md {
+                width: 100%;
+            }
+        }
+        .button-block {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            width: 100%;
+            margin-top: 1rem;
+            button {
+                min-width: 150px;
+                width: 100%;
+                font-size: clamp(12px, 1vw, 20px);
+            }
+        }
+    }
+}
+
+.delete-lesson {
+    width: 200px;
+    & > button {
+        top: 0;
+        right: 0;
+    }
+    .button-block {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        width: 100%;
+        gap: 1rem;
+        button {
+            width: 70%;
+        }
+    }
+}
+
+.error {
+    width: 400px;
+    text-align: center;
+    color: red;
+    & > button {
+        top: 0;
+        right: 0;
+    }
+}

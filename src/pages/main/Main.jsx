@@ -7,8 +7,9 @@ import { FaGraduationCap } from 'react-icons/fa'
 import { GiGreekTemple, GiHamburgerMenu } from "react-icons/gi";
 import SchoolSettings from "../../components/schoolSettings/SchoolSettings";
 import ClassesSettings from "../../components/classesSettings/ClassesSettings";
-import "./style.scss";
 import TeachersSettings from "../../components/teachersSettings/TeachersSettings";
+import SubjectsSettings from "../../components/subjectsSettings/SubjectsSettings";
+import "./style.scss";
 
 let navItems = [
   {icon: <PiNotebook className="icon" />, linkClass: 'main-navbar__item', text: 'subjects'},
@@ -18,13 +19,12 @@ let navItems = [
 ]
 
 function Main() {
-  let [modal, setModal] = useState({ school: false, classes: false, teachers: false });
+  let [modal, setModal] = useState({ school: false, classes: false, teachers: false, subjects: false });
   const [isNavExpanded, setIsNavExpanded] = useState(false)
   const { t } = useTranslation();
 
-  function onClose(name, setSelected) {
+  function onClose(name) {
     setModal({...modal, [name]: false});
-    setSelected && setSelected(false);
   }
 
   function onOpen(name) {
@@ -37,7 +37,8 @@ function Main() {
       <div className={isNavExpanded ? "main-navbar__menu expanded" : "main-navbar__menu"}>
       {navItems.map(({ icon, linkClass, text }) => {
         return (
-          <Link className={linkClass} key={text} onClick={() => onOpen(text)} >
+          <Link className={linkClass} key={text} onClick=
+          {() => onOpen(text)} >
             {icon}
             <p className="text">{t(text)}</p>
           </Link>
@@ -49,6 +50,7 @@ function Main() {
     <SchoolSettings schoolModal={modal.school} closeSchoolModal={onClose}/>
     <TeachersSettings teachersModal={modal.teachers} closeTeachersModal={onClose}/>
     <ClassesSettings classesModal={modal.classes} closeClassesModal={onClose}/>
+    <SubjectsSettings subjectsModal={modal.subjects} closeSubjectsModal={onClose}/>
     </>
   );
 }

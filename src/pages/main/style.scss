@@ -21,6 +21,7 @@
             border-top: 1px solid #213458;
             &.expanded {
                 display: flex;
+                height: 100vw
             }
         }
     }

@@ -1,6 +1,7 @@
 import { updateTable } from "../../features/timTableSlice";
 import { useDispatch } from "react-redux";
 import { useImmer } from "use-immer";
+import { useTranslation } from 'react-i18next'
 import { Modal } from "react-responsive-modal";
 import { GiGreekTemple } from "react-icons/gi";
 import { LiaTableSolid } from "react-icons/lia";
@@ -37,6 +38,8 @@ function SchoolSettings({ schoolModal, closeSchoolModal }) {
   let [contextValue, setContextValue] = useImmer({})
   const dispatch = useDispatch()
   
+  const { t } = useTranslation()
+
   function passAction(action, payload) {
     dispatch(action(payload))
   }
@@ -73,13 +76,13 @@ function SchoolSettings({ schoolModal, closeSchoolModal }) {
       <section className="school-settings__schoolName-section">
         <GiGreekTemple className="icon" />
         <div className="text-block">
-          <label>Name of school:</label>
-          <label>Academic year:</label>
+          <label>{t('name of school')}:</label>
+          <label>{t('academic year')}:</label>
           {/* <label>Registration name:</label> */}
         </div>
         <div className="input-block">
-          <input value={value.name} onChange={onSet} name="name" type="text" placeholder="Name of school"/>
-          <input value={value.year} onChange={onSet} name="year" type="text" placeholder="Academic year 2023/2024" />
+          <input value={value.name} onChange={onSet} name="name" type="text" placeholder={t('name of school')}/>
+          <input value={value.year} onChange={onSet} name="year" type="text" placeholder={t('academic year')} />
           {/* <div className="wrapper"> */}
             {/* <input value={value.registrationName} onChange={onSet} name="registrationName" type="text" placeholder="Registration name"/> */}
             {/* <button className="OSstyle">Change</button> */}
@@ -90,29 +93,29 @@ function SchoolSettings({ schoolModal, closeSchoolModal }) {
       <section className="school-settings__days-section">
         <LiaTableSolid className="icon" />
         <div className="text-block">
-          <label>Periods per day:</label>
-          <label>Number of days:</label>
+          <label>{t('periods per day')}:</label>
+          <label>{t('number of days')}:</label>
           {/* <label>Weekend:</label> */}
         </div>
         <div className="selection-block">
           <select value={value.hours} onChange={onSet} className="OSstyle" name="hours">
-            {selectionOptions(31)}
+            {selectionOptions(8)}
           </select>
           <select value={value.days} onChange={onSet} className="OSstyle" name="days">
-            {selectionOptions(10)}
+            {selectionOptions(7)}
           </select>
           {/* <select value={value.weekend} onChange={onSet} className="OSstyle" name="weekend">
             {selectionOptions(['Saturday - Sunday', 'Friday - Saturday', 'Thursday - Friday'])}
           </select> */}
         </div>
-        <div className="button-block">
+        {/* <div className="button-block">
           <button className="OSstyle">Bell Times/Rename periods</button>
           <button className="OSstyle">Rename days</button>
-        </div>
+        </div> */}
       </section>
       <div className="confirm-button-block">
-        <button className="OSstyle" onClick={setContext}>OK</button>
-        <button className="OSstyle" onClick={onClose}>Cancel</button>
+        <button className="OSstyle" onClick={setContext}>{t("ok")}</button>
+        <button className="OSstyle" onClick={onClose}>{t("cancel")}</button>
       </div>
     </Modal>
   );

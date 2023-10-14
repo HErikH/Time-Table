@@ -1,7 +1,7 @@
 @use '../../index.scss' as *;
 @use '../../mixins.scss' as *;
 
-.classes-settings {
+.subjects-settings {
     @extend %modal-settings;
     & > button {
         top: 1px;
@@ -11,8 +11,8 @@
         display: flex;
         justify-content: space-between;
         flex-wrap: wrap;
-        .classes-list {
-            @extend %table-list;
+        .subjects-list {
+            @extend %table-list
         }
         .right-sidebar {
             display: flex;
@@ -24,6 +24,7 @@
                 display: flex;
                 align-items: center;
                 gap: 3px;
+                height: 25px;
                 @include md {
                     width: 400px;
                 }
@@ -40,7 +41,7 @@
     }
 }
 
-.classes-action {
+.subjects-action {
     @extend %modal-settings;
     width: 40%;
     & > button {
@@ -87,7 +88,7 @@
     }
 }
 
-.delete-class {
+.delete-subject {
     width: 200px;
     & > button {
         top: 0;
@@ -105,7 +106,7 @@
     }
 }
 
-.class-exists {
+.subject-exists {
     width: 400px;
     text-align: center;
     color: red;

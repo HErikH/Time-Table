@@ -1,0 +1,136 @@
+! timTable: make single dr(horizontal) area that will allow only one draggable element 
+make inside single dg area relying on hours(dr, dg)
+
+! after every dragEnd, update the state of subjectStack
+
+# when we loop over stacks in footer we need exclude the classesContent object
+# by spread operator like 
+# <let {classesContent, rest} = obj> and then continue with <rest> or
+# save it as a _ <let {classesContent: _, rest} = obj>
+
+# redux: state architecture 
+# redux: unique id for dr, dg and unique keys 
+
+# // main solution
+
+# "1": { 
+#     lessonId: 1, 
+#     subjectId: 1, 
+#     teachersId: {"1": 1}, // maybe several teachersId
+#     classesId: { 
+#         "1": { 
+#             chapterId: "all", 
+#             groupId: "all" 
+#         } // maybe several classesId
+#     }, 
+#     classRoomsId: {"1": 1}, 
+#     lessonsCount: 4, 
+#     lessonsLength: 1, 
+#     places: { 
+#         "878488": { 
+#             dayId: 1, 
+#             hourId: 1 
+#         }, 
+#         "478847": { 
+#             dayId: 1, 
+#             hourId: 5 
+#         } 
+#     } 
+# }
+
+# // second solution
+
+# classesContent {
+#     subjectStack1: { 
+#         id: 'subjectStack1',
+#         content: []
+#         # content: {
+#         #     contentId: 1,
+#         #     xValue: 'En'
+#         # }
+#     },
+#     subjectStack2: { 
+#         id: 'subjectStack2',
+#         content: {
+#             contentId: 1,
+#             xValue: 'En'
+#         }
+#     },
+#     subjectStack3: { 
+#         id: 'subjectStack3',
+#         content: {
+#             contentId: 1,
+#             xValue: 'En'
+#         }
+#     }
+# }
+
+// new changes
+
+// jsonStringify anel sax objectner@
+// lessonsi classesId in naev tal object {
+    chapterId: 'all',
+    groupId: 'all'
+}
+
+classes group 
+
+// chapter = { 
+//     group unique id // "895487": { 
+//         groupName: "txaner", 
+//         groupWholeLessonsCount: 0, 
+//         groupMembersCount: 0 
+//     }, 
+//     "91674887": { 
+//         groupName: "axchikner", 
+//         groupWholeLessonsCount: 0, 
+//         groupMembersCount: 0 
+//     } 
+// }
+
+// all 
+
+// chapterId = "all" 
+// chapter = { 
+//     "all": { 
+//     groupName: "all class", 
+//     groupWholeLessonsCount: 4, 
+//     groupMembersCount: 0 
+// }
+// }
+
+// work times
+
+const workTimes= { 
+    "1": { 
+        "1": "possible", 
+        "2": "not_available", 
+        "3": "available" 
+    } 
+}
+
+// teachersId = {"1": 1, "3": 3} 
+            // classRoomsId = {"2": 2, "3": 3} 
+            // classesId = { 
+                classId // "1": { 
+                    // chapterId: "all" 
+                    // groupId: "all" 
+                // } 
+                // "2": { 
+                    // chapterId: "all" 
+                    // groupId: "all" 
+                // } 
+            // }
+
+stacks
+
+lessonns countic hana& placesi length u ardyunq@ klini subjectnneri qanak@ 
+
+ondragendi vaxt etuma put withouterror u rerendera linum kubiknner@ u stack@ 
+lessonns countic hana& placesi lengthi hashvin
+
+
+
+
+# * We need to get lessonId, tableId, classId, dayId, hourId at the end of drag end
+# * From destination

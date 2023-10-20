@@ -1,0 +1,19 @@
+.pageNotFound {
+  z-index: 4;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100vw;
+  padding-top: 200px;
+  color: white;
+  background-color: #213458;
+  .bigText {
+    font-size: 150px;
+    font-weight: 700;
+  }
+  .smallText {
+    font-size: 44px;
+  }
+}

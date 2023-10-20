@@ -11,17 +11,18 @@
             display: none;
             position: absolute;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
             padding: 1.5rem 0;
             width: 100%;
             top: 34px;
             left: 0;
-            height: calc(100vh - 77px);
             background-color: white;
             border-top: 1px solid #213458;
             &.expanded {
+                z-index: 3;
                 display: flex;
-                height: 100vw
+                height: 100vw;
             }
         }
     }

@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { deleteFooterStacksDrag } from "../../features/dragDropSlice";
 import { useDispatch, useSelector } from "react-redux/es/exports";
 import { Droppable, Draggable } from "react-beautiful-dnd";

@@ -50,7 +50,6 @@ let initialValue = {
 
 function ClassesSettings({ classesModal, closeClassesModal }) {
   const classes = useSelector((state) => state.classes);
-
   const dispatch = useDispatch();
 
   let [modal, setModal] = useState(modalStates);

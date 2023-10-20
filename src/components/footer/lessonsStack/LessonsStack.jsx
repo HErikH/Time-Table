@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import './style.scss'
 
 function LessonsStack({ setAvailable }) {
-  let { classesContent:_, ...stacks} = useSelector(state => state.dragDrop)
+  let stacks = useSelector(state => state.dragDrop)
   let [reviewState, setReviewState] = useState(false)
 
   const { t } = useTranslation()

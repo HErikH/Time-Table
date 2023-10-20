@@ -14,6 +14,7 @@ import Timetable from "./components/Timetable/Timetable";
 import Main from "./pages/main/Main";
 import Help from "./pages/help/Help";
 import Footer from "./components/footer/Footer";
+import PageNotFound from "./pages/404/PageNotFound";
 import Loader from "./components/ui/loader/Loader";
 import './App.scss'
 
@@ -67,10 +68,11 @@ function App() {
 
   return (
     <>
-    <Header />
+    <Header />  
     <Routes>
-      <Route path="/" element={<Main />} />
+      <Route path={"/"} element={<Main />} />
       <Route path="/help" element={<Help />} />
+      <Route path="*" element={<PageNotFound />} />
     </Routes>
 
     <DragDropContext 

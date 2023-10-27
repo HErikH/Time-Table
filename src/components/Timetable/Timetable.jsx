@@ -1,4 +1,6 @@
+import { useContext } from "react";
 import { deleteFooterStacksDrag } from "../../features/dragDropSlice";
+import { GlobalContext } from "../../App";
 import { useDispatch, useSelector } from "react-redux/es/exports";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
@@ -6,7 +8,8 @@ import { v4 as uuidV4 } from "uuid";
 import { useImmer } from "use-immer";
 import "./style.scss";
 
-function Timetable({ initialFetch, available }) {
+function Timetable({ available, setLessonPeriod }) {
+  const initialFetch = useContext(GlobalContext)
   const table = useSelector((state) => state.timeTable.weekDays);
   const classes = useSelector((state) => state.classes);
   const lessons = useSelector((state) => state.lessons);
@@ -36,7 +39,7 @@ function Timetable({ initialFetch, available }) {
           {Object.values(table[item].hours).map((h) => {
             return (
               <div key={h.hourId} className="per-days__hour">
-                {h.name}
+                {h.shortName}
               </div>
             );
           })}
@@ -58,7 +61,7 @@ function Timetable({ initialFetch, available }) {
         <tr className="classes" key={classItem.classId}>
           <td 
           className={
-            `classes__class ${available == classItem.classId ? 
+            `classes__class ${available.classId == classItem.classId ? 
             'classes__class_theme' : ''}`
           }
           // className='classes__class'
@@ -85,15 +88,22 @@ function Timetable({ initialFetch, available }) {
                           className="per-days__hour"
                           {...provided.droppableProps}
                           ref={provided.innerRef}
+                          onMouseLeave={() => setLessonPeriod(false)}  
                         >
                           {Object.values(classItem.lessons).map((lessonId, lessonIndex) => {
-                              return Object.values(lessons[lessonId].places).map((place) => {
+                              return lessons[lessonId] && Object.values(lessons[lessonId].places).map((place) => {
                                 if (place.dayId == day.dayId && place.hourId == hour.hourId) {
                                   return (
                                   <span 
                                   key={place.hourId} 
                                   className="subject"
-                                  onClick={() => deletePlacedLesson(place.placeId, lessonId)}                                 
+                                  onClick={() => deletePlacedLesson(place.placeId, lessonId)}      
+                                  onMouseEnter={() => setLessonPeriod({timeStart: hour.timeStart, timeEnd: hour.timeEnd})}
+                                  onMouseLeave={() => setLessonPeriod(false)}  
+                                  style={{
+                                    backgroundColor: subjects[lessons[lessonId].subjectId].color,
+                                    color: '#e3e3e3'
+                                  }}
                                    >
                                     {subjects[lessons[lessonId].subjectId].shortName}
                                   </span>

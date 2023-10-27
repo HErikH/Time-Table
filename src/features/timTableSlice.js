@@ -21,10 +21,11 @@ export const fetchTable = createAsyncThunk(
 export const updateTable = createAsyncThunk(
   'timeTable/updateTable',
   async function(payload) {
-    let promises = [], infoKey = null, count = 0 
+    let promises = []
+    let {timeInfo, daysInfo, ...rest} = payload
 
-    for (const key in payload) {
-      if (payload[key]) {
+    for (const key in rest) {
+      let infoKey = null, count = 0 
         switch(key) {
           case 'days':
             count = 'daysCount'
@@ -38,14 +39,29 @@ export const updateTable = createAsyncThunk(
             break
         }
 
-        const result = await fetchDataFromApi(
+        const response = await fetchDataFromApi(
           "settings/update/" + (infoKey ? infoKey : key),
-          {tableId: 1,[count ? count : key]: payload[key]},
+          {tableId: 1,[count ? count : key]: rest[key]},
           'post'
         )
-        promises.push(result)
-      }
+
+        promises.push(response)
     }
+
+    let timeResponse = timeInfo && await fetchDataFromApi(
+      'settings/update/hour/info',
+      {tableId: 1, ...timeInfo},
+      'post'
+    )
+
+    let daysResponse = daysInfo && await fetchDataFromApi(
+      'settings/update/day/name',
+      {tableId: 1, ...daysInfo},
+      'post'
+    )
+
+    timeResponse && promises.push(timeResponse)
+    daysResponse && promises.push(daysResponse)
 
     let result = await Promise.all(promises)
     return result.at(-1).data.table

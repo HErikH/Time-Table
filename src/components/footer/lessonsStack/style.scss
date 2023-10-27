@@ -4,6 +4,7 @@
 .stacks-section {
   display: flex;
   width: 100%;
+  box-shadow: 0 0 5px silver;
   &__stacks {
     display: flex;
     flex-wrap: wrap;
@@ -11,14 +12,18 @@
     height: 150px;
     gap: 50px;
     padding: 1rem 1rem;
-    background-color: #ceced3;
+    background-color: white;
     .stack {
+      position: relative;
       .subject {
         position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         width: 40px;
         height: 40px;
-        background-color: red;
         border: 1px solid silver;
+        color: #e3e3e3;
         box-shadow: 2px 2px 0px hsl(0, 0%, 30%), 
         4px 4px 0px hsl(0, 0%, 60%),
         6px 6px 0px hsl(0, 0%, 100%);
@@ -29,7 +34,7 @@
   &__review {
     width: 40%;
     padding: 1rem 1rem;
-    background-color: #797990;
+    background-color: #213458;
     .subject-block {
       display: flex;
       align-items: center;
@@ -39,7 +44,6 @@
         display: inline-block;
         width: 40px;
         height: 40px;
-        background-color: red;
         border: 1px solid silver;
       }
     }

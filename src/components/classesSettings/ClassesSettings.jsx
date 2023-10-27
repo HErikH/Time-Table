@@ -147,7 +147,7 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
                   >
                     <td>{item[1].longName}</td>
                     <td>{item[1].shortName}</td>
-                    <td></td>
+                    <td>{item[1].wholeLessonsCount}</td>
                     <td></td>
                   </tr>
                 );
@@ -269,7 +269,11 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
         </div>
       </Modal>
 
-      <LessonsModal lessonsModal={modal.lessons} closeLessonsModal={onClose}/>
+      <LessonsModal 
+      section={selected && selected[1]}
+      lessonsModal={modal.lessons} 
+      closeLessonsModal={onClose}
+      />
 
       <Modal
         classNames={{ modal: "class-exists" }}

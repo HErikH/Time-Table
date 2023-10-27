@@ -134,3 +134,9 @@ lessonns countic hana& placesi lengthi hashvin
 
 # * We need to get lessonId, tableId, classId, dayId, hourId at the end of drag end
 # * From destination
+
+
+
+
+# * Recreate drag logic
+# *   

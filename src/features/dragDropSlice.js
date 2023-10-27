@@ -54,9 +54,9 @@ export const deleteFooterStacksDrag = createAsyncThunk(
 export const getFooterStacks = createAsyncThunk(
     'dragDrop/getFooterStacks',
     async function(_, {getState, dispatch}) {
-      let { lessons, subjects, teachers, classes } = await getState()
-      dispatch(changeFooterStacks({ lessons, subjects, teachers, classes })) 
-   }
+      let { lessons, subjects, teachers, classes, classrooms } = await getState()
+      dispatch(changeFooterStacks({ lessons, subjects, teachers, classes, classrooms })) 
+    }
 )
 
 const dragDropSlice = createSlice({
@@ -65,7 +65,7 @@ const dragDropSlice = createSlice({
   reducers: {
     changeFooterStacks(_, { payload }) {
       let next = {}
-      let {lessons, subjects, teachers, classes} = structuredClone(payload)
+      let {lessons, subjects, teachers, classes, classrooms} = structuredClone(payload)
 
       for (const key in lessons) {
       let unIdStack = lessons[key].lessonId
@@ -82,8 +82,10 @@ const dragDropSlice = createSlice({
             contentId: unIdContent, 
             subjectShortName: subjects[lessons[key].subjectId].shortName + (i + 1),
             subjectLongName: subjects[lessons[key].subjectId].longName,
+            subjectColor: subjects[lessons[key].subjectId].color,
             teacherName: teachers[Object.keys(lessons[key].teachersId)[0]].name,
-            classLongName: classes[Object.keys(lessons[key].classesId)[0]].longName
+            classLongName: classes[Object.keys(lessons[key].classesId)[0]].longName,
+            classroomLongName: classrooms[Object.keys(lessons[key].classRoomsId)[0]].longName,
           }                                                         
         }          
       } 

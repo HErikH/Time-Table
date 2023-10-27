@@ -4,10 +4,14 @@ import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { useImmer } from "use-immer";
 import { Modal } from "react-responsive-modal";
+import LessonsModal from "../ui/modals/lessonsModal/LessonsModal";
 import "react-responsive-modal/styles.css";
 import { BiPlusCircle } from "react-icons/bi";
 import { PiNotebook } from "react-icons/pi";
 import { MdOutlineRemoveCircleOutline } from "react-icons/md";
+import { HiOutlineSquare2Stack } from "react-icons/hi2"
+import hexRgb from "hex-rgb";
+import rgbHex from 'rgb-hex';
 import './style.scss'
 
 let buttonData = [
@@ -26,18 +30,25 @@ let buttonData = [
     className: "OSstyle",
     text: "Delete",
   },
+  {
+    icon: <HiOutlineSquare2Stack style={{ fill: "pink" }} />,
+    className: "OSstyle",
+    text: "Lessons",
+  },
 ];
 
 let modalStates = {
   new: false,
   edit: false,
   delete: false,
+  lessons: false,
   error: false,
 };
 
 let initialValue = {
   longName: "",
   shortName: "",
+  color: "#000000"
 };
 
 function SubjectsSettings({ subjectsModal, closeSubjectsModal }) {
@@ -56,16 +67,19 @@ function SubjectsSettings({ subjectsModal, closeSubjectsModal }) {
   
   function onOpen(name) {
     name = name.toLowerCase();
+
     if (name == 'edit') {
       setValue((prev) => {
         prev.longName = selected[1].longName
         prev.shortName = selected[1].shortName
+        prev.color = '#' + rgbHex(selected[1].color)
       })
     }
     setModal({ ...modal, [name]: true });
   }
 
   function onClose(name) {
+    name = name.toLowerCase();
     setModal({ ...modal, [name]: false });
     setSelected(false)
     setValue(initialValue)
@@ -87,7 +101,9 @@ function SubjectsSettings({ subjectsModal, closeSubjectsModal }) {
           return
         } 
       }
-      passAction(addSubject, value)
+      const [r, g, b] = hexRgb(value.color, {format: 'array'}).slice(0, -1)
+
+      passAction(addSubject, {...value, color: `rgba(${r}, ${g}, ${b})`})
       onClose(name)
       return
     } else if (name == 'edit') {
@@ -139,7 +155,7 @@ function SubjectsSettings({ subjectsModal, closeSubjectsModal }) {
             >
               <td>{item[1].longName}</td>
               <td>{item[1].shortName}</td>
-              <td></td>
+              <td>{item[1].wholeLessonsCount}</td>
               <td></td>
             </tr>
           )})}
@@ -167,15 +183,22 @@ function SubjectsSettings({ subjectsModal, closeSubjectsModal }) {
 
     </Modal>
 
-    <Modal classNames={{modal: 'create-subject subjects-action'}} open={modal.new} onClose={() => onClose("new")} center>
+    <Modal 
+      classNames={{modal: 'create-subject subjects-action'}} 
+      open={modal.new} 
+      onClose={() => onClose("new")} 
+      center
+    >
       <div className="container">
       <div className="text-block">
         <label>{t("subject title")}:</label>
         <label>{t("short-name")}:</label>
+        <label>{t("color")}:</label>
       </div>
       <div className="input-block">
         <input name='longName' value={value.longName} onChange={onSet} type="text" placeholder={t("subject title")}/>
         <input name='shortName' value={value.shortName} onChange={onSet} type="text" placeholder={t("short-name")}/>
+        <input name="color" value={value.color} onChange={onSet} type="color"/>
       </div>
       <div className="button-block">
         <button className="OSstyle" onClick={()=>setContext('new')}>{t("ok")}</button>
@@ -189,10 +212,12 @@ function SubjectsSettings({ subjectsModal, closeSubjectsModal }) {
       <div className="text-block">
         <label>{t("subject title")}:</label>
         <label>{t("short-name")}:</label>
+        <label>{t("color")}:</label>
       </div>
       <div className="input-block">
         <input name='longName' value={value.longName} onChange={onSet} type="text" placeholder={t("subject title")}/>
         <input name='shortName' value={value.shortName} onChange={onSet} type="text" placeholder={t("short-name")}/>
+        <input name="color" value={value.color} onChange={onSet} type="color"/>
       </div>
       <div className="button-block">
         <button className="OSstyle" onClick={()=>setContext('edit')}>{t("ok")}</button>
@@ -208,6 +233,12 @@ function SubjectsSettings({ subjectsModal, closeSubjectsModal }) {
       </div>
     </Modal>
         
+    <LessonsModal 
+    section={selected && selected[1]}
+    lessonsModal={modal.lessons} 
+    closeLessonsModal={onClose}
+    />
+
     <Modal 
     classNames={{modal: 'subject-exists'}} 
     open={modal.error} 

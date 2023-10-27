@@ -1,89 +1,182 @@
-@use '../../index.scss' as *;
-@use '../../mixins.scss' as *;
+@use "../../index.scss" as *;
+@use "../../mixins.scss" as *;
 
 .school-settings {
-    @extend %modal-settings;
-    & > button {
-        top: 1px;
-        right: 2px;
+  @extend %modal-settings;
+  & > button {
+    top: 1px;
+    right: 2px;
+  }
+  &__schoolName-section,
+  &__days-section {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    gap: 15px;
+    height: 150px;
+    padding: 1rem 1rem 1rem 1rem;
+    border: 2px outset;
+    border-radius: 5px;
+    .icon {
+      position: relative;
+      font-size: 80px;
+      color: #213458;
+      @include md {
+        display: none;
+      }
     }
-    &__schoolName-section, &__days-section {
+    .text-block {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      @include md {
+        display: none;
+      }
+    }
+    .input-block {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      input {
+        padding-left: 5px;
+        outline: none;
+        &:nth-child(2) {
+          width: 200px;
+        }
+      }
+      .wrapper {
+        display: flex;
+        gap: 5px;
+        input {
+          width: 75%;
+        }
+      }
+      @include md {
+        width: 100%;
+      }
+    }
+  }
+  &__days-section {
+    .selection-block,
+    .button-block {
+      display: flex;
+      margin-left: 20px;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .selection-block {
+      width: 190px;
+    }
+    .button-block {
+      margin-top: 15px;
+      align-self: flex-start;
+    }
+    .modals-block {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      .OSstyle {
+        font-size: 13px;
+      }
+    }
+  }
+
+  .confirm-button-block {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 1rem;
+    margin-top: 1rem;
+    button {
+      width: 100%;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+.modals-action {
+  @extend %modal-settings;
+  & > button {
+    top: 1px;
+    right: 2px;
+  }
+  .container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    .bells-list {
+      @extend %table-list;
+    }
+    .days-list {
+      @extend %table-list;
+    }
+    .right-sidebar {
+      display: flex;
+      float: right;
+      flex-direction: column;
+      width: 20%;
+      gap: 15px;
+      button {
         display: flex;
         align-items: center;
-        margin-top: 20px;
-        gap: 15px;
-        height: 150px;
-        padding: 1rem 1rem 1rem 1rem;
-        border: 2px outset;
-        border-radius: 5px;
-        .icon {
-            position:relative;
-            font-size: 80px;
-            color: #213458;
-            @include md {
-                display: none;
-            }
+        gap: 3px;
+        height: 25px;
+        @include md {
+          width: 400px;
         }
-        .text-block {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            @include md {
-            display: none;
-            }
+        svg {
+          font-size: 20px;
         }
-        .input-block {
-            width: 50%;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            input {
-                padding-left: 5px;
-                outline: none;
-                &:nth-child(2) {
-                    width: 200px;
-                }
-            }
-            .wrapper {
-                display: flex;
-                gap: 5px;
-                input {
-                    width: 75%;
-                }
-            }
-            @include md {
-                width: 100%;
-            }
-        }
-    }
-    &__days-section {
-        .selection-block, .button-block {
-            display: flex;
-            margin-left: 20px;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .selection-block {
-            width: 190px;
-            select:not(:last-child) {
-                width: 39%;
-            }
-        }
-        .button-block {
-            margin-top: 15px;
-            align-self: flex-start;
-        }
-    }
-
-    .confirm-button-block {
-        display: flex;
-        flex-wrap: wrap;
+      }
+      @include md {
         width: 100%;
-        gap: 1rem;
         margin-top: 1rem;
-        button {
-            width: 100%;
-            font-size: 0.9rem;
-        }
+        align-items: center;
+      }
     }
+    .text-block {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      label:nth-child(3), label:nth-child(4){
+        margin-top: 13px;
+      }
+      @include md {
+        display: none;
+      }
+    }
+    .input-block {
+      width: 55%;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      input:not(:nth-child(3)) {
+        padding-left: 5px;
+        outline: none;
+      }
+      input:nth-child(3) {
+        width: 50px;
+        height: 50px;
+      }
+      @include md {
+        width: 100%;
+      }
+      .selection-block {
+        display: flex;
+        justify-content: space-around;
+      }
+    }
+    .button-block {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      gap: 1rem;
+      margin-top: 1rem;
+      button {
+        width: 100%;
+        font-size: clamp(12px, 1vw, 20px);
+      }
+    }
+  }
 }

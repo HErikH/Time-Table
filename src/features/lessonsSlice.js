@@ -15,7 +15,7 @@ export const getLessons = createAsyncThunk(
 export const addLesson = createAsyncThunk(
     'lessons/addLesson',
     async function(payload) {
-        let {teachersId, classesId, ...rest} = structuredClone(payload)
+        let {teachersId, classesId, classRoomsId, ...rest} = structuredClone(payload)
         classesId[Object.keys(classesId)[0]] = {
             chapterId: "all",
             groupId: "all"
@@ -26,6 +26,7 @@ export const addLesson = createAsyncThunk(
             tableId: 1, 
             teachersId: JSON.stringify(teachersId),
             classesId: JSON.stringify(classesId),
+            classRoomsId: JSON.stringify(classRoomsId),
             ...rest
             }, 
             'post')
@@ -36,7 +37,7 @@ export const addLesson = createAsyncThunk(
 export const editLesson = createAsyncThunk(
     'lessons/editLesson',
     async function(payload) {
-        let {teachersId, classesId, ...rest} = structuredClone(payload)
+        let {teachersId, classesId, classRoomsId, ...rest} = structuredClone(payload)
         classesId[Object.keys(classesId)[0]] = {
             chapterId: "all",
             groupId: "all"
@@ -48,6 +49,7 @@ export const editLesson = createAsyncThunk(
             tableId: 1, 
             teachersId: JSON.stringify(teachersId),
             classesId: JSON.stringify(classesId),
+            classRoomsId: JSON.stringify(classRoomsId),
             ...rest
             },
             'post')

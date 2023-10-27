@@ -21,11 +21,13 @@
   "name of school": "Name of school",
   "academic year": "Academic year",
   "periods per day": "Periods per day",
+  "name of the period": "Name of the period",
   "number of days": "Number of days",
   "ok": "Ok",
   "cancel": "Cancel",
   "class name": "Class Name",
   "teacher name": "Teacher Name",
+  "classroom name": "Classroom name",
   "new": "New",
   "edit": "Edit",
   "delete": "Delete",
@@ -35,13 +37,18 @@
   "last name": "Last name",
   "short-name": "Short-name",
   "count": "Count",
+  "color": "Color",
   "time off": "Time off",
+  "start time": "Start Time",
+  "end time": "End Time",
   "new lesson": "New lesson",
   "edit lesson": "Edit lesson",
   "lessons/week": "Lessons/Week",
+  "bell times / rename periods": "Bell times / Rename periods",
+  "rename days": "Rename days",
   "teacher exists": "The teacher already exists !",
   "class exists": "The class already exists !",
   "subject exists": "The subject already exists !",
-  "necessary inputs": "The teacher, subject, and class must be entered !"
+  "necessary inputs": "The teacher, subject, classroom and class must be entered !"
 }
 

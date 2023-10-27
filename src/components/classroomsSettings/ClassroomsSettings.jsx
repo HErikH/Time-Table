@@ -1,16 +1,15 @@
-import { addTeacher, editTeacher, deleteTeacher } from '../../features/teachersSlice'
+import { addClassroom, editClassroom, deleteClassroom } from "../../features/classroomsSlice";
 import { useSelector, useDispatch } from "react-redux/es/exports";
-import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useImmer } from "use-immer";
-import { useTranslation } from 'react-i18next';
-import { Modal } from "react-responsive-modal";
+import { useState } from "react";
 import LessonsModal from "../ui/modals/lessonsModal/LessonsModal";
+import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
 import { BiPlusCircle } from "react-icons/bi";
-import { FaGraduationCap } from "react-icons/fa";
+import { BsPeople } from "react-icons/bs";
 import { MdOutlineRemoveCircleOutline } from "react-icons/md";
 import { HiOutlineSquare2Stack } from "react-icons/hi2"
-
 import "./style.scss";
 
 let buttonData = [
@@ -20,7 +19,7 @@ let buttonData = [
     text: "New",
   },
   {
-    icon: <FaGraduationCap style={{ fill: "#213458" }} />,
+    icon: <BsPeople style={{ fill: "#EDC369" }} />,
     className: "OSstyle",
     text: "Edit",
   },
@@ -45,12 +44,12 @@ let modalStates = {
 };
 
 let initialValue = {
-  name: "",
-  lastName: "",
+  longName: "",
+  shortName: "",
 };
 
-function TeachersSettings({ teachersModal, closeTeachersModal }) {
-  const teachers = useSelector((state) => state.teachers);
+function ClassroomsSettings({ classroomsModal, closeClassroomsModal }) {
+  const classrooms = useSelector((state) => state.classrooms);
   const dispatch = useDispatch();
 
   let [modal, setModal] = useState(modalStates);
@@ -60,9 +59,9 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
   let { t } = useTranslation();
 
   function passAction(action, payload) {
-    dispatch(action(payload))
+    dispatch(action(payload));
   }
-  
+
   function onOpen(name) {
     name = name.toLowerCase();
     if (name == "edit") {
@@ -88,34 +87,32 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
 
   function setContext(name) {
     if (name == "new") {
-      for (const key in teachers) {
+      for (const key in classrooms) {
         if (
-          String(teachers[key].name.toLowerCase()) ==
-          value.name.toLowerCase()
-        ) {
+          String(classrooms[key].longName).toLowerCase() == value.longName.toLowerCase()
+          ) {
           onOpen("error");
           return;
         }
       }
-      passAction(addTeacher, value);
+      passAction(addClassroom, value);
       onClose(name);
       return;
     } else if (name == "edit") {
-      for (const key in teachers) {
+      for (const key in classrooms) {
         if (
-          String(teachers[key].name).toLowerCase() ==
-            value.name.toLowerCase() &&
-            teachers[key].teacherId != selected[0]
+          String(classrooms[key].longName).toLowerCase() == value.longName.toLowerCase() &&
+          classrooms[key].classId != selected[0]
         ) {
           onOpen("error");
           return;
         }
       }
-      passAction(editTeacher, { teacherId: selected[0], data: value });
+      passAction(editClassroom, { classRoomId: selected[0], data: value });
       onClose(name);
       return;
     } else if (name == "delete") {
-      passAction(deleteTeacher, selected[0]);
+      passAction(deleteClassroom, selected[0]);
       onClose(name);
       return;
     } else {
@@ -126,30 +123,30 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
   return (
     <>
       <Modal
-        classNames={{ modal: "teachers-settings" }}
-        open={teachersModal}
-        onClose={() => {closeTeachersModal("teachers"); setSelected(false)}}
+        classNames={{ modal: "classrooms-settings" }}
+        open={classroomsModal}
+        onClose={() => {closeClassroomsModal("classrooms"); setSelected(false)}}
         center
       >
         <main className="container">
-          <table className="teachers-list">
+          <table className="classrooms-list">
             <thead>
               <tr>
-                {["Name", "Last Name", "Count", "Time off"].map((item) => {
+                {["Name", "Short-Name", "Count", "Time off"].map((item) => {
                   return <th key={item}>{t(item.toLocaleLowerCase())}</th>;
                 })}
               </tr>
             </thead>
             <tbody>
-              {Object.entries(teachers).map((item) => {
+              {Object.entries(classrooms).map((item) => {
                 return (
                   <tr
                     className={selected[0] == item[0] ? "selected-row" : ""}
                     key={item[0]}
                     onClick={() => setSelected(item)}
                   >
-                    <td>{item[1].name}</td>
-                    <td>{item[1].lastName}</td>
+                    <td>{item[1].longName}</td>
+                    <td>{item[1].shortName}</td>
                     <td>{item[1].wholeLessonsCount}</td>
                     <td></td>
                   </tr>
@@ -172,7 +169,7 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
                   >
                     {icon}
                   </span>
-                  {t(text.toLocaleLowerCase())}
+                  {t((text.toLocaleLowerCase()))}
                 </button>
               );
             })}
@@ -181,30 +178,30 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
       </Modal>
 
       <Modal
-        classNames={{ modal: "create-teacher teachers-action" }}
+        classNames={{ modal: "create-classroom classrooms-action" }}
         open={modal.new}
         onClose={() => onClose("new")}
         center
       >
         <div className="container">
           <div className="text-block">
-            <label>{t("first name")}:</label>
-            <label>{t("last name")}:</label>
+            <label>{t("classroom name")}:</label>
+            <label>{t("short-name")}:</label>
           </div>
           <div className="input-block">
             <input
-              name="name"
-              value={value.name}
+              name="longName"
+              value={value.longName}
               onChange={onSet}
               type="text"
-              placeholder={t("first name")}
+              placeholder={t("classroom name")}
             />
             <input
-              name="lastName"
-              value={value.lastName}
+              name="shortName"
+              value={value.shortName}
               onChange={onSet}
               type="text"
-              placeholder={t("last name")}
+              placeholder={t("short-name")}
             />
           </div>
           <div className="button-block">
@@ -219,30 +216,30 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
       </Modal>
 
       <Modal
-        classNames={{ modal: "edit-teacher teachers-action" }}
+        classNames={{ modal: "edit-classroom classrooms-action" }}
         open={modal.edit}
         onClose={() => onClose("edit")}
         center
       >
         <div className="container">
           <div className="text-block">
-            <label>{t("first name")}:</label>
+            <label>{t("classroom name")}:</label>
             <label>{t("short-name")}:</label>
           </div>
           <div className="input-block">
             <input
-              name="name"
-              value={value.name}
+              name="longName"
+              value={value.longName}
               onChange={onSet}
               type="text"
-              placeholder={t("first name")}
+              placeholder={t("classroom name")}
             />
             <input
-              name="lastName"
-              value={value.lastName}
+              name="shortName"
+              value={value.shortName}
               onChange={onSet}
               type="text"
-              placeholder={t("last name")}
+              placeholder={t("short-name")}
             />
           </div>
           <div className="button-block">
@@ -257,7 +254,7 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
       </Modal>
 
       <Modal
-        classNames={{ modal: "delete-teacher" }}
+        classNames={{ modal: "delete-classroom" }}
         open={modal.delete}
         onClose={() => onClose("delete")}
         center
@@ -271,7 +268,7 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
           </button>
         </div>
       </Modal>
-      
+
       <LessonsModal 
       section={selected && selected[1]}
       lessonsModal={modal.lessons} 
@@ -279,15 +276,15 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
       />
 
       <Modal
-        classNames={{ modal: "teacher-exists" }}
+        classNames={{ modal: "classroom-exists" }}
         open={modal.error}
         onClose={() => onClose("error")}
         center
       >
-        {t("teacher exists")}
+        {t("classroom exists")}
       </Modal>
     </>
   );
 }
 
-export default TeachersSettings;
+export default ClassroomsSettings;

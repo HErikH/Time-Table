@@ -4,7 +4,7 @@ import Flags from "country-flag-icons/react/3x2";
 import { useCookies } from 'react-cookie';
 import "./style.scss";
 
-let flags = [
+const flags = [
     {flagCode: 'GB', buttonClass: 'flag-button', name: 'English', code: 'en'},
     {flagCode: 'RU', buttonClass: 'flag-button', name: 'Русский', code: 'ru'},
     {flagCode: 'AM', buttonClass: 'flag-button', name: 'Հայերեն', code: 'am'},

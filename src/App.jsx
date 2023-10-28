@@ -1,6 +1,9 @@
 import { Routes, Route } from "react-router-dom";
-import { useEffect, useState, useCallback, createContext } from "react";
+import { useEffect, useState, useRef, createContext } from "react";
 import { getFooterStacks, updateFooterStacksDrag } from "./features/dragDropSlice";
+import { Modal } from "react-responsive-modal";
+import { useTranslation } from 'react-i18next'
+import { useReactToPrint } from "react-to-print"
 import { DragDropContext } from "react-beautiful-dnd";
 import { fetchTable } from "./features/timTableSlice";
 import { getClasses } from "./features/classesSlice";
@@ -18,18 +21,32 @@ import Help from "./pages/help/Help";
 import Footer from "./components/footer/Footer";
 import PageNotFound from "./pages/404/PageNotFound";
 import Loader from "./components/ui/loader/Loader";
+import "react-responsive-modal/styles.css";
 import './App.scss'
 
 import { fetchDataFromApi } from "./utils/api";
 
 export const GlobalContext = createContext()
+export const PrintContext = createContext()
 
 function App() {
+  const printRef = useRef()
+  const handlePrint = useReactToPrint({
+    content: () => printRef.current,
+    documentTitle: 'Scheduler',
+    onAfterPrint: () => {
+      setPrintModal(true)
+    }
+  });
+
   const [loading, setLoading] = useState(true)
   const [available, setAvailable] = useState(false)
   const [lessonPeriod, setLessonPeriod] = useState(false)
+  const [printModal, setPrintModal] = useState(false)
 
   let dispatch = useDispatch()
+
+  const { t } = useTranslation()
 
   async function initialFetch(result) {
     setAvailable(false)
@@ -76,28 +93,38 @@ function App() {
   return (
     loading ? 
     <Loader /> : 
-    <GlobalContext.Provider value={initialFetch}>
-    <LanguageModalDynamic />
-    <Header />  
-    <Routes>
-      <Route path={"/"} element={<Main />} />
-      <Route path="/help" element={<Help />} />
-      <Route path="*" element={<PageNotFound />} />
-    </Routes>
-    <DragDropContext onDragEnd={initialFetch}>
-    <Timetable 
-    key='table' 
-    available={available}
-    setLessonPeriod={setLessonPeriod}
-    />
-    <Footer 
-    key='footer' 
-    available={available}
-    setAvailable={setAvailable}
-    lessonPeriod={lessonPeriod}
-    />
-    </DragDropContext>
-    </GlobalContext.Provider>
+    <PrintContext.Provider value={{printRef, handlePrint}}>
+      <GlobalContext.Provider value={initialFetch}>
+      <LanguageModalDynamic />
+      <Header />  
+      <Routes>
+        <Route path={"/"} element={<Main />} />
+        <Route path="/help" element={<Help />} />
+        <Route path="*" element={<PageNotFound />} />
+      </Routes>
+      <DragDropContext onDragEnd={initialFetch}>
+      <Timetable 
+      key='table' 
+      available={available}
+      setLessonPeriod={setLessonPeriod}
+      />
+      <Footer 
+      key='footer' 
+      available={available}
+      setAvailable={setAvailable}
+      lessonPeriod={lessonPeriod}
+      />
+      </DragDropContext>
+      <Modal
+        classNames={{ modal: "print-modal" }}
+        open={printModal}
+        onClose={() => setPrintModal(false)}
+        center
+      >
+        {t('the table saved')}
+      </Modal>
+      </GlobalContext.Provider>
+    </PrintContext.Provider>
   )
 }
 

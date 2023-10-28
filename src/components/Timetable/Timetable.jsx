@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { deleteFooterStacksDrag } from "../../features/dragDropSlice";
-import { GlobalContext } from "../../App";
+import { GlobalContext, PrintContext } from "../../App";
 import { useDispatch, useSelector } from "react-redux/es/exports";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
@@ -10,6 +10,7 @@ import "./style.scss";
 
 function Timetable({ available, setLessonPeriod }) {
   const initialFetch = useContext(GlobalContext)
+  const { printRef } = useContext(PrintContext)
   const table = useSelector((state) => state.timeTable.weekDays);
   const classes = useSelector((state) => state.classes);
   const lessons = useSelector((state) => state.lessons);
@@ -126,7 +127,7 @@ function Timetable({ available, setLessonPeriod }) {
   }
 
   return (
-    <div className="time-table-wrapper">
+    <div ref={printRef} className="time-table-wrapper">
       <table className="time-table">
         <thead>
           <tr>

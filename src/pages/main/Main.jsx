@@ -1,10 +1,12 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { PiNotebook } from 'react-icons/pi'
 import { BsPeople, BsFillDoorOpenFill } from 'react-icons/bs'
+import { AiOutlinePrinter } from 'react-icons/ai'
 import { FaGraduationCap } from 'react-icons/fa'
 import { GiGreekTemple, GiHamburgerMenu } from "react-icons/gi";
+import { PrintContext } from "../../App";
 import SchoolSettings from "../../components/schoolSettings/SchoolSettings";
 import ClassesSettings from "../../components/classesSettings/ClassesSettings";
 import TeachersSettings from "../../components/teachersSettings/TeachersSettings";
@@ -21,6 +23,7 @@ let navItems = [
 ]
 
 function Main() {
+  const { handlePrint } = useContext(PrintContext)
   let [modal, setModal] = useState({ 
     school: false, 
     classes: false, 
@@ -43,6 +46,10 @@ function Main() {
     <>
     <nav className="main-navbar">
       <div className={isNavExpanded ? "main-navbar__menu expanded" : "main-navbar__menu"}>
+      <Link onClick={handlePrint} className="main-navbar__item">
+        <AiOutlinePrinter className="icon" />
+        <p className="text">{t('print')}</p>
+      </Link>
       {navItems.map(({ icon, linkClass, text }) => {
         return (
           <Link className={linkClass} key={text} onClick={() => onOpen(text)}>

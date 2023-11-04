@@ -1,7 +1,8 @@
 import { addSubject, editSubject, deleteSubject } from "../../features/subjectsSlice";
+import { getFooterStacks } from "../../features/dragDropSlice";
 import { useSelector, useDispatch } from "react-redux/es/exports";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useImmer } from "use-immer";
 import { Modal } from "react-responsive-modal";
 import LessonsModal from "../ui/modals/lessonsModal/LessonsModal";
@@ -10,6 +11,7 @@ import { BiPlusCircle } from "react-icons/bi";
 import { PiNotebook } from "react-icons/pi";
 import { MdOutlineRemoveCircleOutline } from "react-icons/md";
 import { HiOutlineSquare2Stack } from "react-icons/hi2"
+import Loader from "../ui/loader/Loader";
 import hexRgb from "hex-rgb";
 import rgbHex from 'rgb-hex';
 import './style.scss'
@@ -57,17 +59,21 @@ function SubjectsSettings({ subjectsModal, closeSubjectsModal }) {
 
   let [modal, setModal] = useState(modalStates);
   let [value, setValue] = useImmer(initialValue);
-  let [selected, setSelected] = useState(false)
+  let [selected, setSelected] = useState(false);
+  let [errorText, setErrorText] = useState('')
+  const [loading, setLoading] = useState(false)
 
   let { t } = useTranslation();
 
-  function passAction(action, payload) {
-    dispatch(action(payload))
+  async function passAction(action, payload) {
+    setLoading(true)
+    await dispatch(action(payload))
+    await dispatch(getFooterStacks())
+    setLoading(false)
   }
   
   function onOpen(name) {
     name = name.toLowerCase();
-
     if (name == 'edit') {
       setValue((prev) => {
         prev.longName = selected[1].longName
@@ -93,10 +99,20 @@ function SubjectsSettings({ subjectsModal, closeSubjectsModal }) {
 
   function setContext(name) {
     if (name == 'new') {
+      if(!value.longName || !value.shortName) {
+        setErrorText(
+          t("the subject title and short name must be entered")
+        )
+        onOpen("error");
+        return
+      }
       for (const key in subjects) {
         if (
           String(subjects[key].longName.toLowerCase()) == value.longName.toLowerCase()
           ) {       
+          setErrorText(
+            t("subject exists")
+          )
           onOpen('error')
           return
         } 
@@ -107,16 +123,28 @@ function SubjectsSettings({ subjectsModal, closeSubjectsModal }) {
       onClose(name)
       return
     } else if (name == 'edit') {
+      if(!value.longName || !value.shortName) {
+        setErrorText(
+          t("the subject title and short name must be entered")
+        )
+        onOpen("error");
+        return
+      }
       for (const key in subjects) {
         if (
           String(subjects[key].longName).toLowerCase() == value.longName.toLowerCase() && 
           subjects[key].subjectId != selected[0]
-          ) {          
+          ) {       
+          setErrorText(
+            t("subject exists")
+          )   
           onOpen('error')
           return
         } 
       }
-      passAction(editSubject, {subjectId: selected[0], data: value})
+      const [r, g, b] = hexRgb(value.color, {format: 'array'}).slice(0, -1)
+
+      passAction(editSubject, {subjectId: selected[0], data: {...value, color: `rgba(${r}, ${g}, ${b})`}})
       onClose(name)
       return
     } else if (name == 'delete') {
@@ -129,6 +157,8 @@ function SubjectsSettings({ subjectsModal, closeSubjectsModal }) {
   }
 
   return (
+    loading ? 
+    <Loader /> :
     <>
     <Modal
       classNames={{ modal: 'subjects-settings' }}
@@ -140,7 +170,7 @@ function SubjectsSettings({ subjectsModal, closeSubjectsModal }) {
         <table className='subjects-list'>
           <thead>
             <tr>
-            {['Name','Short-Name','Count','Time off'].map((item) => {
+            {['Name','Short-Name','Count'].map((item) => {
                 return <th key={item}>{t(item.toLocaleLowerCase())}</th>
             })}
             </tr>
@@ -156,7 +186,6 @@ function SubjectsSettings({ subjectsModal, closeSubjectsModal }) {
               <td>{item[1].longName}</td>
               <td>{item[1].shortName}</td>
               <td>{item[1].wholeLessonsCount}</td>
-              <td></td>
             </tr>
           )})}
           </tbody>
@@ -240,12 +269,12 @@ function SubjectsSettings({ subjectsModal, closeSubjectsModal }) {
     />
 
     <Modal 
-    classNames={{modal: 'subject-exists'}} 
+    classNames={{modal: 'error'}} 
     open={modal.error} 
     onClose={()=>onClose('error')} 
     center
     >
-      {t("subject exists")}
+      {errorText}
     </Modal>
   </> 
   );

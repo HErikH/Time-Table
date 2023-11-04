@@ -137,6 +137,11 @@ lessonns countic hana& placesi lengthi hashvin
 
 
 
+// Global error for internal server
+// Errors of drag 
 
-# * Recreate drag logic
-# *   
+//  Error - put without error
+// {errorMessage: "not passed day id or big or small 1-" + table.dataValues.weekDaysCount}
+// {errorMessage: "not passed hour id or big or small 1-" + table.dataValues.daysHours}
+// {errorMessage: "wrong lesson id"}
+// {errorMessage: "this lesson teacher(s) have lesson in this dayId and hourId", errorsWithTeachers}

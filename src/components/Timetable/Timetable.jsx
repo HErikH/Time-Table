@@ -1,8 +1,7 @@
 import { useContext } from "react";
 import { deleteFooterStacksDrag } from "../../features/dragDropSlice";
-import { GlobalContext, PrintContext } from "../../App";
+import { GlobalContext, DragSourceData } from "../../App";
 import { useDispatch, useSelector } from "react-redux/es/exports";
-import { Droppable, Draggable } from "react-beautiful-dnd";
 import { useTranslation } from "react-i18next";
 import { v4 as uuidV4 } from "uuid";
 import { useImmer } from "use-immer";
@@ -10,14 +9,29 @@ import "./style.scss";
 
 function Timetable({ available, setLessonPeriod }) {
   const initialFetch = useContext(GlobalContext)
-  const { printRef } = useContext(PrintContext)
+  const { sourceData } = useContext(DragSourceData)
   const table = useSelector((state) => state.timeTable.weekDays);
   const classes = useSelector((state) => state.classes);
   const lessons = useSelector((state) => state.lessons);
   const subjects = useSelector((state) => state.subjects);
+  const teachers = useSelector((state) => state.teachers);
+  const classrooms = useSelector((state) => state.classrooms);
   const dispatch = useDispatch();
 
   let { t } = useTranslation();
+
+  function handleHourClick(destinationData) {
+    if (
+      sourceData &&
+      Object.keys(sourceData.classesId).includes(String(destinationData.classId))
+      ) { 
+        initialFetch({
+          source: sourceData,
+          destination: destinationData
+        })
+      return
+    }
+  }
 
   function createWeekDays() {
     let result = [];
@@ -54,6 +68,7 @@ function Timetable({ available, setLessonPeriod }) {
   async function deletePlacedLesson(placeId, lessonId) {
     await dispatch(deleteFooterStacksDrag({placeId, lessonId}))
     initialFetch()
+    setLessonPeriod(false)
   }
 
   function createClassRow() {
@@ -65,7 +80,6 @@ function Timetable({ available, setLessonPeriod }) {
             `classes__class ${available.classId == classItem.classId ? 
             'classes__class_theme' : ''}`
           }
-          // className='classes__class'
           >
             {classItem.longName}
           </td>
@@ -75,47 +89,47 @@ function Timetable({ available, setLessonPeriod }) {
                 {Object.values(day.hours).map((hour) => {
                   let unId = uuidV4();
                   return (
-                    <Droppable
+                      <div
                       key={unId}
-                      droppableId={JSON.stringify({
+                      className="per-days__hour"
+                      data-destination-id='destinationArea' 
+                      onClick={() => {
+                        handleHourClick({
                         droppableId: "subjectStack" + unId,
                         dayId: day.dayId,
                         hourId: hour.hourId,
                         classId: classItem.classId,
-                      })}
-                    >
-                      {(provided) => (
-                        <div
-                          className="per-days__hour"
-                          {...provided.droppableProps}
-                          ref={provided.innerRef}
-                          onMouseLeave={() => setLessonPeriod(false)}  
-                        >
-                          {Object.values(classItem.lessons).map((lessonId, lessonIndex) => {
+                        })
+                      }}
+                      >
+                          {Object.values(classItem.lessons).map((lessonId) => {
                               return lessons[lessonId] && Object.values(lessons[lessonId].places).map((place) => {
                                 if (place.dayId == day.dayId && place.hourId == hour.hourId) {
                                   return (
-                                  <span 
+                                  <div 
                                   key={place.hourId} 
                                   className="subject"
                                   onClick={() => deletePlacedLesson(place.placeId, lessonId)}      
-                                  onMouseEnter={() => setLessonPeriod({timeStart: hour.timeStart, timeEnd: hour.timeEnd})}
+                                  onMouseEnter={() => setLessonPeriod({
+                                    teacherName: teachers[Object.keys(lessons[lessonId].teachersId)[0]].name,
+                                    subjectLongName: subjects[lessons[lessonId].subjectId].longName,
+                                    classroomLongName: classrooms[Object.keys(lessons[lessonId].classRoomsId)[0]].longName,
+                                    timeStart: hour.timeStart, 
+                                    timeEnd: hour.timeEnd
+                                  })}
                                   onMouseLeave={() => setLessonPeriod(false)}  
                                   style={{
                                     backgroundColor: subjects[lessons[lessonId].subjectId].color,
                                     color: '#e3e3e3'
                                   }}
                                    >
-                                    {subjects[lessons[lessonId].subjectId].shortName}
-                                  </span>
+                                    <span>{subjects[lessons[lessonId].subjectId].shortName}</span>
+                                  </div>
                                 )}
                               });
                             })
                           }
-                          {provided.placeholder}
                         </div>
-                      )}
-                    </Droppable>
                   );
                 })}
               </td>
@@ -127,8 +141,11 @@ function Timetable({ available, setLessonPeriod }) {
   }
 
   return (
-    <div ref={printRef} className="time-table-wrapper">
-      <table className="time-table">
+    <div className="time-table-wrapper">
+      <table 
+      className="time-table" 
+      onMouseLeave={() => setLessonPeriod(false)}  
+      >
         <thead>
           <tr>
             <th>{t("classes")}</th>
@@ -138,9 +155,10 @@ function Timetable({ available, setLessonPeriod }) {
 
         <tbody>
           <tr>
-            <td style={{ textAlign: "center", border: "1px solid #00739a" }}>
+            {/* <td style={{ textAlign: "center", border: "1px solid #dbe9ee" }}>
               {t("hours")}-&#62;
-            </td>
+            </td> */}
+            <td style={{border: "1px solid #dbe9ee"}}></td>
             {createPeriodsPerDay()}
           </tr>
           {createClassRow()}

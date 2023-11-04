@@ -1,4 +1,6 @@
 import { addClass, editClass, deleteClass } from "../../features/classesSlice";
+import { getTeachers } from "../../features/teachersSlice";
+import { fetchTable } from "../../features/timTableSlice";
 import { useSelector, useDispatch } from "react-redux/es/exports";
 import { useTranslation } from "react-i18next";
 import { useImmer } from "use-immer";
@@ -10,6 +12,7 @@ import { BiPlusCircle } from "react-icons/bi";
 import { BsPeople } from "react-icons/bs";
 import { MdOutlineRemoveCircleOutline } from "react-icons/md";
 import { HiOutlineSquare2Stack } from "react-icons/hi2"
+import Loader from "../ui/loader/Loader";
 import "./style.scss";
 
 let buttonData = [
@@ -46,28 +49,39 @@ let modalStates = {
 let initialValue = {
   longName: "",
   shortName: "",
+  supervisor: "",
+  classSupervisors: {},
 };
 
 function ClassesSettings({ classesModal, closeClassesModal }) {
   const classes = useSelector((state) => state.classes);
+  const teachers = useSelector((state) => state.teachers)
   const dispatch = useDispatch();
 
   let [modal, setModal] = useState(modalStates);
   let [value, setValue] = useImmer(initialValue);
   let [selected, setSelected] = useState(false);
+  let [errorText, setErrorText] = useState('')
+  const [loading, setLoading] = useState(false)
 
   let { t } = useTranslation();
 
-  function passAction(action, payload) {
-    dispatch(action(payload));
+  async function passAction(action, payload) {
+    setLoading(true)
+    await dispatch(action(payload));
+    await dispatch(fetchTable())
+    await dispatch(getTeachers())
+    setLoading(false)
   }
 
   function onOpen(name) {
-    name = name.toLowerCase();
+    name = name.toLowerCase()
     if (name == "edit") {
       setValue((prev) => {
         prev.longName = selected[1].longName;
         prev.shortName = selected[1].shortName;
+        prev.supervisor = teachers?.[Object.keys(selected[1].classSupervisors)[0]]?.name
+        prev.classSupervisors = { [Object.keys(selected[1].classSupervisors)[0]]: Object.keys(selected[1].classSupervisors)[0] };
       });
     }
     setModal({ ...modal, [name]: true });
@@ -80,17 +94,36 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
   }
 
   function onSet(e) {
-    setValue((prev) => {
-      prev[e.target.name] = e.target.value;
-    });
+    if (e.target.name == 'supervisor') {
+      let selectedOption = e.target.options.selectedIndex
+      setValue((prev) => {
+        prev.supervisor = e.target.value
+        prev.classSupervisors = { [e.target.options[selectedOption].id]: e.target.options[selectedOption].id };
+      });
+      return
+    } else {
+      setValue((prev) => {
+        prev[e.target.name] = e.target.value;
+      });
+    }
   }
 
   function setContext(name) {
     if (name == "new") {
+      if(!value.longName || !value.shortName || !value.supervisor) {
+        setErrorText(
+          t("the class name short name and supervisor must be entered")
+        )
+        onOpen("error");
+        return;
+      }
       for (const key in classes) {
         if (
           String(classes[key].longName).toLowerCase() == value.longName.toLowerCase()
           ) {
+          setErrorText(
+            t("class exists")
+          )
           onOpen("error");
           return;
         }
@@ -99,11 +132,21 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
       onClose(name);
       return;
     } else if (name == "edit") {
+      if(!value.longName || !value.shortName || !value.supervisor) {
+        setErrorText(
+          t("the class name short name and supervisor must be entered")
+        )
+        onOpen("error");
+        return;
+      }
       for (const key in classes) {
         if (
           String(classes[key].longName).toLowerCase() == value.longName.toLowerCase() &&
           classes[key].classId != selected[0]
         ) {
+          setErrorText(
+            t("class exists")
+          )
           onOpen("error");
           return;
         }
@@ -121,6 +164,8 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
   }
 
   return (
+    loading ? 
+    <Loader /> :
     <>
       <Modal
         classNames={{ modal: "classes-settings" }}
@@ -132,7 +177,7 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
           <table className="classes-list">
             <thead>
               <tr>
-                {["Name", "Short-Name", "Count", "Time off"].map((item) => {
+                {["Name", "Short-Name", "Count", "Class supervisor"].map((item) => {
                   return <th key={item}>{t(item.toLocaleLowerCase())}</th>;
                 })}
               </tr>
@@ -148,7 +193,7 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
                     <td>{item[1].longName}</td>
                     <td>{item[1].shortName}</td>
                     <td>{item[1].wholeLessonsCount}</td>
-                    <td></td>
+                    <td>{teachers?.[Object.keys(item[1]?.classSupervisors)[0]]?.name}</td>
                   </tr>
                 );
               })}
@@ -187,6 +232,7 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
           <div className="text-block">
             <label>{t("class name")}:</label>
             <label>{t("short-name")}:</label>
+            <label>{t("class supervisor")}:</label>
           </div>
           <div className="input-block">
             <input
@@ -203,6 +249,23 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
               type="text"
               placeholder={t("short-name")}
             />
+            <select
+            value={value.supervisor}
+            onChange={onSet}
+            className="OSstyle"
+            name="supervisor"
+            >
+            <option value=""></option>
+            {Object.values(teachers).map((item) => {
+            return <option 
+              id={item.teacherId} 
+              key={item.teacherId} 
+              value={item.name}
+              >
+                {item.name}
+              </option>
+            })}
+            </select>
           </div>
           <div className="button-block">
             <button className="OSstyle" onClick={() => setContext("new")}>
@@ -225,6 +288,7 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
           <div className="text-block">
             <label>{t("class name")}:</label>
             <label>{t("short-name")}:</label>
+            <label>{t("class supervisor")}:</label>
           </div>
           <div className="input-block">
             <input
@@ -241,6 +305,23 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
               type="text"
               placeholder={t("short-name")}
             />
+            <select
+            value={value.supervisor}
+            onChange={onSet}
+            className="OSstyle"
+            name="supervisor"
+            >
+            <option value=""></option>
+            {Object.values(teachers).map((item) => {
+            return <option 
+              id={item.teacherId} 
+              key={item.teacherId} 
+              value={item.name}
+              >
+                {item.name}
+              </option>
+            })}
+            </select>
           </div>
           <div className="button-block">
             <button className="OSstyle" onClick={() => setContext("edit")}>
@@ -276,12 +357,12 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
       />
 
       <Modal
-        classNames={{ modal: "class-exists" }}
+        classNames={{ modal: "error" }}
         open={modal.error}
         onClose={() => onClose("error")}
         center
       >
-        {t("class exists")}
+      {errorText}
       </Modal>
     </>
   );

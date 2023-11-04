@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { updateTable } from "../../features/timTableSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useImmer } from "use-immer";
@@ -6,17 +6,19 @@ import { useTranslation } from 'react-i18next'
 import { Modal } from "react-responsive-modal";
 import { GiGreekTemple } from "react-icons/gi";
 import { LiaTableSolid } from "react-icons/lia";
+import { GlobalContext } from "../../App";
+import Loader from "../ui/loader/Loader";
 import "react-responsive-modal/styles.css";
 import "./style.scss";
 
 function selectionOptions(info) {
   let result = [];
 
-  if (Array.isArray(info)) {
-    return info.map(item => {
-        return <option key={item} value={item}>{item}</option>;
-    })
-  }
+  // if (Array.isArray(info)) {
+  //   return info.map(item => {
+  //       return <option key={item} value={item}>{item}</option>;
+  //   })
+  // }
 
   if (info == 55) {
     for (let i = 0; i <= info; i+=5) {
@@ -47,23 +49,23 @@ let modalStates = {
 };
 
 function SchoolSettings({ schoolModal, closeSchoolModal }) {
+  const initialFetch = useContext(GlobalContext)
   const table = useSelector((state) => state.timeTable);
   const dispatch = useDispatch()
 
   let initialValue = {
     name: table.name,
     year: table.year,
-    // registrationName: '',
     hours: table.daysHours,
     days: table.weekDaysCount,
     timeInfo: false,
     daysInfo: false,
-    // weekend: 'Saturday - Sunday'
   } 
   
   let [modal, setModal] = useState(modalStates);
   let [value, setValue] = useImmer(initialValue)
   let [selected, setSelected] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const { t } = useTranslation()
 
@@ -88,8 +90,11 @@ function SchoolSettings({ schoolModal, closeSchoolModal }) {
     `
   }
 
-  function passAction(action, payload) {
-    dispatch(action(payload))
+  async function passAction(action, payload) {
+    setLoading(true)
+    await dispatch(action(payload))
+    await dispatch(initialFetch())
+    setLoading(false)
   }
 
   function onOpen(name) {
@@ -117,7 +122,7 @@ function SchoolSettings({ schoolModal, closeSchoolModal }) {
   function onSet(e) {
     setValue((prev) => {
       if (!e.target.dataset.location) {
-        prev[e.target.name] = prev[e.target.name] = isNaN(Number(e.target.value)) ? e.target.value : Number(e.target.value)
+        prev[e.target.name] = isNaN(Number(e.target.value)) ? e.target.value : Number(e.target.value)
         return
       }
 
@@ -146,6 +151,8 @@ function SchoolSettings({ schoolModal, closeSchoolModal }) {
   }
 
   return (
+    loading ?
+    <Loader /> :
     <>
     <Modal
         classNames={{ modal: "school-settings" }}
@@ -158,15 +165,10 @@ function SchoolSettings({ schoolModal, closeSchoolModal }) {
           <div className="text-block">
             <label>{t('name of school')}:</label>
             <label>{t('academic year')}:</label>
-            {/* <label>Registration name:</label> */}
           </div>
           <div className="input-block">
-            <input value={value.name} onChange={onSet} name="name" type="text" placeholder={t('name of school')}/>
-            <input value={value.year} onChange={onSet} name="year" type="text" placeholder={t('academic year')} />
-            {/* <div className="wrapper"> */}
-              {/* <input value={value.registrationName} onChange={onSet} name="registrationName" type="text" placeholder="Registration name"/> */}
-              {/* <button className="OSstyle">Change</button> */}
-            {/* </div> */}
+            <input value={value.name || ''} onChange={onSet} name="name" type="text" placeholder={t('name of school')}/>
+            <input value={value.year || ''} onChange={onSet} name="year" type="text" placeholder={t('academic year')} />
           </div>
         </section>
   
@@ -175,7 +177,6 @@ function SchoolSettings({ schoolModal, closeSchoolModal }) {
           <div className="text-block">
             <label>{t('periods per day')}:</label>
             <label>{t('number of days')}:</label>
-            {/* <label>Weekend:</label> */}
           </div>
   
           <div className="selection-block">
@@ -185,9 +186,6 @@ function SchoolSettings({ schoolModal, closeSchoolModal }) {
             <select value={value.days} onChange={onSet} className="OSstyle" name="days">
               {selectionOptions(7)}
             </select>
-            {/* <select value={value.weekend} onChange={onSet} className="OSstyle" name="weekend">
-              {selectionOptions(['Saturday - Sunday', 'Friday - Saturday', 'Thursday - Friday'])}
-            </select> */}
           </div>
   
           <div className="modals-block">
@@ -204,20 +202,21 @@ function SchoolSettings({ schoolModal, closeSchoolModal }) {
               {t("rename days")}
             </button>
           </div>
-          {/* <div className="button-block">
-            <button className="OSstyle">Bell Times/Rename periods</button>
-            <button className="OSstyle">Rename days</button>
-          </div> */}
         </section>
         <div className="confirm-button-block">
           <button 
           className="OSstyle" 
-          onClick={()=>{passAction(updateTable, value), 
-          closeSchoolModal('school'), setValue(initialValue)}}
+          onClick={()=>{
+          passAction(updateTable, value), 
+          closeSchoolModal('school')
+          }}
           >
             {t("ok")}
           </button>
-          <button className="OSstyle" onClick={()=>closeSchoolModal('school')}>
+          <button className="OSstyle" onClick={()=>{
+            closeSchoolModal('school')
+            setValue(initialValue)
+          }}>
             {t("cancel")}
           </button>
         </div>

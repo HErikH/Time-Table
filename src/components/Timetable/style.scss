@@ -1,16 +1,19 @@
 .time-table-wrapper {
+    overflow: auto;
     min-height: calc(100vh - 15rem);
     .time-table { 
-        // width: 80%;
         margin: auto;
-        margin-top: 2rem;
+        margin-top: 4rem;
         margin-bottom: 2rem;
         box-shadow: 0 0 20px #213458;
+        border-collapse: separate;
+        border-spacing: 0px;
         thead tr {
             text-align: center;     
             color: #ffffff;
             background-color: #213458;
             th {
+                border: 1px solid #dbe9ee;
                 padding: 12px 15px;
             }
         }
@@ -26,21 +29,32 @@
             &__hour {
             position: relative;
             display: inherit;
-            width: 45px;
+            width: 1%;
+            min-width: 45px;
             height: 45px;
-            border: 1px solid #00739a;
+            border-width: 0.5px;
+            border: 1px solid #dbe9ee;
             cursor: pointer;
             & .subject {
                 position: absolute;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-width: 0;
                 width: 100%;
                 height: 100%;
+                span {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                }
             }
           }
         }
         .classes {
             &__class {
                 width: 100px;
-                border: 1px solid #00739a;
+                border: 1px solid #dbe9ee;
                 text-align: center;
                 &_theme {
                     background-color: #00FF00;

@@ -5,12 +5,14 @@ import { useImmer } from "use-immer";
 import { useTranslation } from 'react-i18next';
 import { Modal } from "react-responsive-modal";
 import LessonsModal from "../ui/modals/lessonsModal/LessonsModal";
+import Loader from '../ui/loader/Loader';
 import "react-responsive-modal/styles.css";
 import { BiPlusCircle } from "react-icons/bi";
 import { FaGraduationCap } from "react-icons/fa";
 import { MdOutlineRemoveCircleOutline } from "react-icons/md";
 import { HiOutlineSquare2Stack } from "react-icons/hi2"
-
+import hexRgb from "hex-rgb";
+import rgbHex from 'rgb-hex';
 import "./style.scss";
 
 let buttonData = [
@@ -47,28 +49,44 @@ let modalStates = {
 let initialValue = {
   name: "",
   lastName: "",
+  shortName: "",
+  email: "",
+  phone: "",
+  gender: "",
+  color: "#000000"
 };
 
 function TeachersSettings({ teachersModal, closeTeachersModal }) {
   const teachers = useSelector((state) => state.teachers);
+  const classes = useSelector((state) => state.classes);
   const dispatch = useDispatch();
 
   let [modal, setModal] = useState(modalStates);
   let [value, setValue] = useImmer(initialValue);
   let [selected, setSelected] = useState(false);
+  let [errorText, setErrorText] = useState('')
+  const [loading, setLoading] = useState(false)
 
   let { t } = useTranslation();
 
-  function passAction(action, payload) {
-    dispatch(action(payload))
+  async function passAction(action, payload) {
+    setLoading(true)
+    await dispatch(action(payload))
+    setLoading(false)
   }
   
   function onOpen(name) {
     name = name.toLowerCase();
     if (name == "edit") {
       setValue((prev) => {
-        prev.longName = selected[1].longName;
+        prev.name = selected[1].name;
+        prev.lastName = selected[1].lastName;
         prev.shortName = selected[1].shortName;
+        prev.phone = selected[1].phone;
+        prev.color = '#' + rgbHex(selected[1].color)
+        prev.gender = selected[1].gender;
+        prev.email = selected[1].email;
+        prev.classIdWhoesSupervisor = { [Object.keys(selected[1].classIdWhoesSupervisor)[0]]: Object.keys(selected[1].classIdWhoesSupervisor)[0] }
       });
     }
     setModal({ ...modal, [name]: true });
@@ -88,30 +106,58 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
 
   function setContext(name) {
     if (name == "new") {
+      if(!value.name || !value.lastName || !value.gender) {
+        setErrorText(
+          t("the name last name and gender must be entered")
+        )
+        onOpen("error");
+        return
+      }
       for (const key in teachers) {
         if (
           String(teachers[key].name.toLowerCase()) ==
-          value.name.toLowerCase()
+          value.name.toLowerCase() &&
+          String(teachers[key].lastName.toLowerCase()) ==
+          value.lastName.toLowerCase()
         ) {
+          setErrorText(
+            t("teacher exists")
+          )
           onOpen("error");
           return;
         }
       }
-      passAction(addTeacher, value);
+      const [r, g, b] = hexRgb(value.color, {format: 'array'}).slice(0, -1)
+
+      passAction(addTeacher, {...value, color: `rgba(${r}, ${g}, ${b})`});
       onClose(name);
       return;
     } else if (name == "edit") {
+      if(!value.name || !value.lastName || !value.gender) {
+        setErrorText(
+          t("the name last name and gender must be entered")
+        )
+        onOpen("error");
+        return
+      }
       for (const key in teachers) {
         if (
-          String(teachers[key].name).toLowerCase() ==
-            value.name.toLowerCase() &&
-            teachers[key].teacherId != selected[0]
+          String(teachers[key].name.toLowerCase()) ==
+          value.name.toLowerCase() &&
+          String(teachers[key].lastName.toLowerCase()) ==
+          value.lastName.toLowerCase() &&
+          teachers[key].teacherId != selected[0]
         ) {
+          setErrorText(
+            t("teacher exists")
+          )
           onOpen("error");
           return;
         }
       }
-      passAction(editTeacher, { teacherId: selected[0], data: value });
+      const [r, g, b] = hexRgb(value.color, {format: 'array'}).slice(0, -1)
+
+      passAction(editTeacher, { teacherId: selected[0], data: {...value, color: `rgba(${r}, ${g}, ${b})`} });
       onClose(name);
       return;
     } else if (name == "delete") {
@@ -124,6 +170,8 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
   }
 
   return (
+    loading ?
+    <Loader /> :
     <>
       <Modal
         classNames={{ modal: "teachers-settings" }}
@@ -135,7 +183,8 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
           <table className="teachers-list">
             <thead>
               <tr>
-                {["Name", "Last Name", "Count", "Time off"].map((item) => {
+                {["Name", "Last Name", "Count", "Class of supervisor", 
+                "Gender", "Phone", "Email"].map((item) => {
                   return <th key={item}>{t(item.toLocaleLowerCase())}</th>;
                 })}
               </tr>
@@ -151,7 +200,12 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
                     <td>{item[1].name}</td>
                     <td>{item[1].lastName}</td>
                     <td>{item[1].wholeLessonsCount}</td>
-                    <td></td>
+                    <td>
+                      {classes?.[Object.keys(item[1].classIdWhoesSupervisor)[0]]?.longName}
+                    </td>
+                    <td>{t(item[1].gender)}</td>
+                    <td>{item[1].phone}</td>
+                    <td>{item[1].email}</td>
                   </tr>
                 );
               })}
@@ -190,6 +244,11 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
           <div className="text-block">
             <label>{t("first name")}:</label>
             <label>{t("last name")}:</label>
+            <label>{t("short-name")}:</label>
+            <label>{t("gender")}:</label>
+            <label>{t("phone")}:</label>
+            <label>{t("email")}:</label>
+            <label>{t("color")}:</label>
           </div>
           <div className="input-block">
             <input
@@ -206,6 +265,48 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
               type="text"
               placeholder={t("last name")}
             />
+            <input
+              name="shortName"
+              value={value.shortName}
+              onChange={onSet}
+              type="text"
+              placeholder={t("short-name")}
+            />
+            <div className='radio-block'>
+            <span>
+              <input
+                name="gender"
+                value='male'
+                type="radio"
+                checked={value.gender == 'male'}
+                onChange={onSet}
+              />{t('male')}
+            </span>
+            <span>
+              <input
+                name="gender"
+                value='female'
+                type="radio"
+                checked={value.gender == 'female'}
+                onChange={onSet}
+              />{t('female')}
+            </span>
+            </div>
+            <input
+              name="phone"
+              value={value.phone}
+              onChange={onSet}
+              type="tel"
+              placeholder={t("phone")}
+            />
+            <input
+              name="email"
+              value={value.email}
+              onChange={onSet}
+              type="email"
+              placeholder={t("email")}
+            />
+          <input name="color" value={value.color} onChange={onSet} type="color"/>
           </div>
           <div className="button-block">
             <button className="OSstyle" onClick={() => setContext("new")}>
@@ -227,7 +328,12 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
         <div className="container">
           <div className="text-block">
             <label>{t("first name")}:</label>
+            <label>{t("last name")}:</label>
             <label>{t("short-name")}:</label>
+            <label>{t("gender")}:</label>
+            <label>{t("phone")}:</label>
+            <label>{t("email")}:</label>
+            <label>{t("color")}:</label>
           </div>
           <div className="input-block">
             <input
@@ -244,6 +350,48 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
               type="text"
               placeholder={t("last name")}
             />
+            <input
+              name="shortName"
+              value={value.shortName}
+              onChange={onSet}
+              type="text"
+              placeholder={t("short-name")}
+            />
+            <div className='radio-block'>
+            <span>
+              <input
+                name="gender"
+                value='male'
+                type="radio"
+                checked={value.gender == 'male'}
+                onChange={onSet}
+              />{t('male')}
+            </span>
+            <span>
+              <input
+                name="gender"
+                value='female'
+                type="radio"
+                checked={value.gender == 'female'}
+                onChange={onSet}
+              />{t('female')}
+            </span>
+            </div>
+            <input
+              name="phone"
+              value={value.phone}
+              onChange={onSet}
+              type="tel"
+              placeholder={t("phone")}
+            />
+            <input
+              name="email"
+              value={value.email}
+              onChange={onSet}
+              type="email"
+              placeholder={t("email")}
+            />
+          <input name="color" value={value.color} onChange={onSet} type="color"/>
           </div>
           <div className="button-block">
             <button className="OSstyle" onClick={() => setContext("edit")}>
@@ -279,12 +427,12 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
       />
 
       <Modal
-        classNames={{ modal: "teacher-exists" }}
+        classNames={{ modal: "error" }}
         open={modal.error}
         onClose={() => onClose("error")}
         center
       >
-        {t("teacher exists")}
+        {errorText}
       </Modal>
     </>
   );

@@ -1,0 +1,25 @@
+@use "../../../index.scss" as *;
+
+.print-teacher {
+  @extend %modal-settings;
+  text-align: center;
+  // color: #019779;
+  & > button {
+    top: 1px;
+    right: 2px;
+  }
+  .button-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+  }
+  .teacher-select {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+}

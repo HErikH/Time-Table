@@ -17,7 +17,16 @@ export const getClasses = createAsyncThunk(
 export const addClass = createAsyncThunk(
     'classes/addClass',
     async function(payload) {
-        const response = await fetchDataFromApi('classes/create', {tableId: 1, ...payload}, 'post')
+        let {classSupervisors, supervisor:_, ...rest} = structuredClone(payload)
+        const response = await fetchDataFromApi(
+            'classes/create', 
+            {
+            tableId: 1, 
+            classSupervisors: JSON.stringify(classSupervisors), 
+            ...rest
+            }, 
+            'post'
+        )
         return JSON.parse(response.data.table.classes)
     }
 ) 
@@ -25,9 +34,15 @@ export const addClass = createAsyncThunk(
 export const editClass = createAsyncThunk(
     'classes/editClass',
     async function(payload) {
+        let {classId, data: {supervisor:_, classSupervisors, ...rest}} = structuredClone(payload)
         const response = await fetchDataFromApi(
             'classes/update', 
-            {tableId: 1, classId: payload.classId, ...payload.data}, 
+            {
+                tableId: 1, 
+                classId: classId, 
+                classSupervisors: JSON.stringify(classSupervisors), 
+                ...rest
+            }, 
             'post')
         return JSON.parse(response.data.table.classes)
     }

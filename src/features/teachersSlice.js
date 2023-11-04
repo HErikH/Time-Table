@@ -23,9 +23,15 @@ export const addTeacher = createAsyncThunk(
 export const editTeacher = createAsyncThunk(
     'teachers/editTeacher',
     async function(payload) {
+        let { classIdWhoesSupervisor, ...rest} = payload.data
         const response = await fetchDataFromApi(
             'teachers/update', 
-            {tableId: 1, teacherId: payload.teacherId, ...payload.data}, 
+            {
+                tableId: 1, 
+                teacherId: payload.teacherId, 
+                classIdWhoesSupervisor: JSON.stringify(classIdWhoesSupervisor),
+                ...rest
+            }, 
             'post')
         return JSON.parse(response.data.table.teachers)
     }

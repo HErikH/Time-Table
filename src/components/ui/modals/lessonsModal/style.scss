@@ -3,7 +3,7 @@
 
 .lessons-settings {
     @extend %modal-settings;
-    width: 600px;
+    max-width: 800px;
     & > button {
         top: 1px;
         right: 2px;

@@ -10,6 +10,7 @@ import { BiPlusCircle } from "react-icons/bi";
 import { BsPeople } from "react-icons/bs";
 import { MdOutlineRemoveCircleOutline } from "react-icons/md";
 import { HiOutlineSquare2Stack } from "react-icons/hi2"
+import Loader from "../ui/loader/Loader";
 import "./style.scss";
 
 let buttonData = [
@@ -55,11 +56,15 @@ function ClassroomsSettings({ classroomsModal, closeClassroomsModal }) {
   let [modal, setModal] = useState(modalStates);
   let [value, setValue] = useImmer(initialValue);
   let [selected, setSelected] = useState(false);
+  let [errorText, setErrorText] = useState('')
+  const [loading, setLoading] = useState(false)
 
   let { t } = useTranslation();
 
-  function passAction(action, payload) {
-    dispatch(action(payload));
+  async function passAction(action, payload) {
+    setLoading(true)
+    await dispatch(action(payload));
+    setLoading(false)
   }
 
   function onOpen(name) {
@@ -87,10 +92,20 @@ function ClassroomsSettings({ classroomsModal, closeClassroomsModal }) {
 
   function setContext(name) {
     if (name == "new") {
+      if(!value.longName || !value.shortName) {
+        setErrorText(
+          t("the classroom name and short name must be entered")
+        )
+        onOpen("error");
+        return
+      }
       for (const key in classrooms) {
         if (
           String(classrooms[key].longName).toLowerCase() == value.longName.toLowerCase()
           ) {
+          setErrorText(
+            t("classroom exists")
+          )
           onOpen("error");
           return;
         }
@@ -99,11 +114,21 @@ function ClassroomsSettings({ classroomsModal, closeClassroomsModal }) {
       onClose(name);
       return;
     } else if (name == "edit") {
+      if(!value.longName || !value.shortName) {
+        setErrorText(
+          t("the classroom name and short name must be entered")
+        )
+        onOpen("error");
+        return
+      }
       for (const key in classrooms) {
         if (
           String(classrooms[key].longName).toLowerCase() == value.longName.toLowerCase() &&
-          classrooms[key].classId != selected[0]
+          classrooms[key].classRoomId != selected[0]
         ) {
+          setErrorText(
+            t("classroom exists")
+          )
           onOpen("error");
           return;
         }
@@ -121,6 +146,8 @@ function ClassroomsSettings({ classroomsModal, closeClassroomsModal }) {
   }
 
   return (
+    loading ?
+    <Loader /> :
     <>
       <Modal
         classNames={{ modal: "classrooms-settings" }}
@@ -132,7 +159,7 @@ function ClassroomsSettings({ classroomsModal, closeClassroomsModal }) {
           <table className="classrooms-list">
             <thead>
               <tr>
-                {["Name", "Short-Name", "Count", "Time off"].map((item) => {
+                {["Name", "Short-Name", "Count"].map((item) => {
                   return <th key={item}>{t(item.toLocaleLowerCase())}</th>;
                 })}
               </tr>
@@ -148,7 +175,6 @@ function ClassroomsSettings({ classroomsModal, closeClassroomsModal }) {
                     <td>{item[1].longName}</td>
                     <td>{item[1].shortName}</td>
                     <td>{item[1].wholeLessonsCount}</td>
-                    <td></td>
                   </tr>
                 );
               })}
@@ -276,12 +302,12 @@ function ClassroomsSettings({ classroomsModal, closeClassroomsModal }) {
       />
 
       <Modal
-        classNames={{ modal: "classroom-exists" }}
+        classNames={{ modal: "error" }}
         open={modal.error}
         onClose={() => onClose("error")}
         center
       >
-        {t("classroom exists")}
+        {errorText}
       </Modal>
     </>
   );

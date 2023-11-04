@@ -1,12 +1,1 @@
-@use "./index.scss" as *;
-
-.print-modal {
-    @extend %modal-settings;
-    text-align: center;
-    color: #019779;
-    & > button {
-      top: 1px;
-      right: 2px;
-    }
-}
 

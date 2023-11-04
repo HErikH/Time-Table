@@ -9,7 +9,7 @@ function Header() {
     <header className="header">
         <div className="header__link-block">
         <Link to='/' className='header__link'>{t('main')}</Link>
-        <Link to='/help' className='header__link'>{t('help')}</Link>
+        {/* <Link to='/help' className='header__link'>{t('help')}</Link> */}
         </div>
     </header>
   )

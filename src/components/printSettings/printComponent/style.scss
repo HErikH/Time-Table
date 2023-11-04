@@ -1,0 +1,22 @@
+.print-timetable {
+    margin: auto;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    border-collapse: collapse;
+    // box-shadow: 0 0 20px #213458;
+    thead tr {
+        text-align: center;     
+        // color: #ffffff;
+        // background-color: #213458;
+        th {
+            padding: 12px 15px;
+            border: 1px solid black;
+        }
+    }
+    td {
+        border: 1px solid black;
+    }
+    .lesson {
+        padding: 0 10px 0 10px;
+    }
+}

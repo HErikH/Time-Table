@@ -238,7 +238,7 @@ function SchoolSettings({ schoolModal, closeSchoolModal }) {
             </tr>
           </thead>
           <tbody>
-          {Object.values(table.weekDays[1].hours).map(({
+          {Object.values(table?.weekDays[1]?.hours).map(({
             hourId, 
             name: newName, 
             shortName: newShortName, 

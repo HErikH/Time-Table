@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
 import { v4 as uuidV4 } from 'uuid';
-import { fetchDataFromApi } from "../utils/api";
+import { fetchDataFromApi } from "../utils/api.js";
 
 let initialState = {error: false};
 

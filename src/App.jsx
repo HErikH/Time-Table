@@ -24,7 +24,7 @@ import { useCookies } from "react-cookie";
 import "react-responsive-modal/styles.css";
 import './App.scss'
 
-import { fetchDataFromApi } from "./utils/api";
+import { fetchDataFromApi } from "./utils/Api";
 
 export const GlobalContext = createContext()
 export const DragSourceData = createContext()

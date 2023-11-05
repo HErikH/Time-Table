@@ -2,11 +2,13 @@ import { useState } from "react";
 import { FaUserTie } from "react-icons/fa";
 import { BiSolidLockAlt } from "react-icons/bi";
 import { BsChevronRight } from "react-icons/bs";
-import { fetchDataFromApi } from "../../utils/api";
+import { fetchDataFromApi } from "../../utils/Api";
+import { useCookies } from "react-cookie";
 import Modal from "react-responsive-modal";
 import "./style.scss";
 
 function Login() {
+  const [cookies, setCookie] = useCookies(['uid'])
   const [userData, setUserData] = useState({ username: "", password: "" });
   const [errorModal, setErrorModal] = useState({modal: false, error: ''})
 
@@ -16,8 +18,9 @@ function Login() {
     if (userData.username != '' && userData.password != '') {
       let response = await fetchDataFromApi('auth/login', {name: userData.username, password: userData.password}, 'post')
       setUserData({ username: "", password: "" })
-      response.data.errorMessage &&
-      setErrorModal({error: response.data.errorMessage, modal: true}) 
+      response.data.errorMessage ?
+      setErrorModal({error: response.data.errorMessage, modal: true}) :
+      setCookie('uid', response.data.uid)
     }
   }
 

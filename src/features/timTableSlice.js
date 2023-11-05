@@ -1,87 +1,94 @@
 import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
-import { fetchDataFromApi } from '../utils/api.js'
+import fetchDataFromApi from "../utils/api.js";
 
 let initialState = {
-    // nameOfSchool: "161",
-    // year: "2023/2024",
-    // registrationName: "161r",
-    // weekend: "Saturday - Sunday",
+  // nameOfSchool: "161",
+  // year: "2023/2024",
+  // registrationName: "161r",
+  // weekend: "Saturday - Sunday",
 };
 
 // Async reducers
 
 export const fetchTable = createAsyncThunk(
-  'timTable/fetchTable',
-  async function() {
-    const { data: { table } } = await fetchDataFromApi('table/read',{tableId: 1},'post')
-    return table
+  "timTable/fetchTable",
+  async function () {
+    const {
+      data: { table },
+    } = await fetchDataFromApi("table/read", { tableId: 1 }, "post");
+    return table;
   }
-)
+);
 
 export const updateTable = createAsyncThunk(
-  'timeTable/updateTable',
-  async function(payload) {
-    let promises = []
-    let {timeInfo, daysInfo, ...rest} = payload
+  "timeTable/updateTable",
+  async function (payload) {
+    let promises = [];
+    let { timeInfo, daysInfo, ...rest } = payload;
 
     for (const key in rest) {
-      let infoKey = null, count = 0 
-        switch(key) {
-          case 'days':
-            count = 'daysCount'
-            break
-          case 'hours':
-            count = 'newHoursCount'
-            break
-          case 'name':
-          case 'year':
-            infoKey = 'info'
-            break
-        }
+      let infoKey = null,
+        count = 0;
+      switch (key) {
+        case "days":
+          count = "daysCount";
+          break;
+        case "hours":
+          count = "newHoursCount";
+          break;
+        case "name":
+        case "year":
+          infoKey = "info";
+          break;
+      }
 
-        const response = await fetchDataFromApi(
-          "settings/update/" + (infoKey ? infoKey : key),
-          {tableId: 1,[count ? count : key]: rest[key]},
-          'post'
-        )
+      const response = await fetchDataFromApi(
+        "settings/update/" + (infoKey ? infoKey : key),
+        { tableId: 1, [count ? count : key]: rest[key] },
+        "post"
+      );
 
-        promises.push(response)
+      promises.push(response);
     }
 
-    let timeResponse = timeInfo && await fetchDataFromApi(
-      'settings/update/hour/info',
-      {tableId: 1, ...timeInfo},
-      'post'
-    )
+    let timeResponse =
+      timeInfo &&
+      (await fetchDataFromApi(
+        "settings/update/hour/info",
+        { tableId: 1, ...timeInfo },
+        "post"
+      ));
 
-    let daysResponse = daysInfo && await fetchDataFromApi(
-      'settings/update/day/name',
-      {tableId: 1, ...daysInfo},
-      'post'
-    )
+    let daysResponse =
+      daysInfo &&
+      (await fetchDataFromApi(
+        "settings/update/day/name",
+        { tableId: 1, ...daysInfo },
+        "post"
+      ));
 
-    timeResponse && promises.push(timeResponse)
-    daysResponse && promises.push(daysResponse)
+    timeResponse && promises.push(timeResponse);
+    daysResponse && promises.push(daysResponse);
 
-    let result = await Promise.all(promises)
-    return result.at(-1).data.table
-   }
-)
+    let result = await Promise.all(promises);
+    return result.at(-1).data.table;
+  }
+);
 
 const timeTableSlice = createSlice({
-    name: 'timTable',
-    initialState,
-    reducers: {},
-    extraReducers: (builder) => {
-      builder.addCase(fetchTable.fulfilled, (_, {payload}) => {
-        payload.weekDays = JSON.parse(payload.weekDays)
-        return payload
-      })
-      builder.addCase(updateTable.fulfilled, (_, {payload}) => {
-        payload.weekDays = JSON.parse(payload.weekDays)
-        return payload
-      })
-    }
-})
+  name: "timTable",
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(fetchTable.fulfilled, (_, { payload }) => {
+      payload.weekDays = JSON.parse(payload.weekDays);
+      return payload;
+    });
+    builder.addCase(updateTable.fulfilled, (_, { payload }) => {
+      payload.weekDays = JSON.parse(payload.weekDays);
+      return payload;
+    });
+  },
+});
 
 export default timeTableSlice.reducer;

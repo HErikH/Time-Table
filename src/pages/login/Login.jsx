@@ -2,25 +2,29 @@ import { useState } from "react";
 import { FaUserTie } from "react-icons/fa";
 import { BiSolidLockAlt } from "react-icons/bi";
 import { BsChevronRight } from "react-icons/bs";
-import { fetchDataFromApi } from "../../utils/Api";
+import fetchDataFromApi from "../../utils/Api";
 import { useCookies } from "react-cookie";
 import Modal from "react-responsive-modal";
 import "./style.scss";
 
 function Login() {
-  const [cookies, setCookie] = useCookies(['uid'])
+  const [cookies, setCookie] = useCookies(["uid"]);
   const [userData, setUserData] = useState({ username: "", password: "" });
-  const [errorModal, setErrorModal] = useState({modal: false, error: ''})
+  const [errorModal, setErrorModal] = useState({ modal: false, error: "" });
 
   async function handleSubmit(e) {
     e.preventDefault();
     // name: 'University', password: 'vPjLZw626v9W'
-    if (userData.username != '' && userData.password != '') {
-      let response = await fetchDataFromApi('auth/login', {name: userData.username, password: userData.password}, 'post')
-      setUserData({ username: "", password: "" })
-      response.data.errorMessage ?
-      setErrorModal({error: response.data.errorMessage, modal: true}) :
-      setCookie('uid', response.data.uid)
+    if (userData.username != "" && userData.password != "") {
+      let response = await fetchDataFromApi(
+        "auth/login",
+        { name: userData.username, password: userData.password },
+        "post"
+      );
+      setUserData({ username: "", password: "" });
+      response.data.errorMessage
+        ? setErrorModal({ error: response.data.errorMessage, modal: true })
+        : setCookie("uid", response.data.uid);
     }
   }
 
@@ -67,14 +71,17 @@ function Login() {
         </div>
       </div>
 
-      <Modal 
-      classNames={{ modal: "error-modal" }}
-      open={errorModal.modal}
-      onClose={() => {setErrorModal({error: '', modal: false})}}
-      center
+      <Modal
+        classNames={{ modal: "error-modal" }}
+        open={errorModal.modal}
+        onClose={() => {
+          setErrorModal({ error: "", modal: false });
+        }}
+        center
       >
         <span>
-          {errorModal.error.charAt(0)?.toUpperCase() + errorModal.error?.slice(1)}
+          {errorModal.error.charAt(0)?.toUpperCase() +
+            errorModal.error?.slice(1)}
         </span>
       </Modal>
     </div>

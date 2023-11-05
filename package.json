@@ -22,6 +22,7 @@
     "i18next-browser-languagedetector": "^7.1.0",
     "i18next-http-backend": "^2.2.2",
     "immer": "^10.0.2",
+    "js-cookie": "^3.0.5",
     "lodash.get": "^4.4.2",
     "lodash.topath": "^4.5.2",
     "lodash.uniqueid": "^4.0.1",

@@ -7,7 +7,8 @@ import './style.scss'
 
 function LessonsStack({ setAvailable, lessonPeriod }) {
   // const initialFetch = useContext(GlobalContext)
-  let {error, ...stacks} = useSelector(state => state.dragDrop)
+  let {error:_, stacks} = useSelector(state => state.dragDrop)
+
   let [reviewState, setReviewState] = useState(false)
   let [clicked, setClicked] = useState(false)
   const { t } = useTranslation()

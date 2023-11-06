@@ -18,7 +18,7 @@ import LanguageModalDynamic from "./components/ui/modals/languageModal/LanguageM
 import Header from "./components/header/Header";
 import Timetable from "./components/Timetable/Timetable";
 import Main from "./pages/main/Main";
-import Help from "./pages/help/Help";
+// import Help from "./pages/help/Help";
 import Footer from "./components/footer/Footer";
 import PageNotFound from "./pages/404/PageNotFound";
 import Loader from "./components/ui/loader/Loader";
@@ -27,7 +27,7 @@ import { useCookies } from "react-cookie";
 import "react-responsive-modal/styles.css";
 import "./App.scss";
 
-import fetchDataFromApi from "./utils/Api";
+// import fetchDataFromApi from "./utils/api.js";
 
 export const GlobalContext = createContext();
 export const DragSourceData = createContext();
@@ -54,6 +54,7 @@ function App() {
     await dispatch(getTeachers());
     await dispatch(getLessons());
     await dispatch(getFooterStacks());
+    
     setLoading(false);
   }
 

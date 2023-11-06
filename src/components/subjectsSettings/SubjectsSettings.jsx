@@ -263,7 +263,7 @@ function SubjectsSettings({ subjectsModal, closeSubjectsModal }) {
     </Modal>
         
     <LessonsModal 
-    section={selected && selected[1]}
+    sectionData={selected && {data: selected[1], section: 'subjects'}}
     lessonsModal={modal.lessons} 
     closeLessonsModal={onClose}
     />

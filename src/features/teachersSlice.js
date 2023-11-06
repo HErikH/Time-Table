@@ -15,9 +15,14 @@ export const getTeachers = createAsyncThunk(
 export const addTeacher = createAsyncThunk(
   "teachers/addTeacher",
   async function (payload) {
+    let { classIdWhoesSupervisor, supervisor: _, ...rest } = structuredClone(payload);
     const response = await fetchDataFromApi(
       "teachers/create",
-      { tableId: 1, ...payload },
+      {
+        tableId: 1,
+        classIdWhoesSupervisor: JSON.stringify(classIdWhoesSupervisor),
+        ...rest,
+      },
       "post"
     );
     return JSON.parse(response.data.table.teachers);

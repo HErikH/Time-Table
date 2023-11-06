@@ -1,4 +1,6 @@
 import { addTeacher, editTeacher, deleteTeacher } from '../../features/teachersSlice'
+import { fetchTable } from "../../features/timTableSlice";
+import { getClasses } from '../../features/classesSlice';
 import { useSelector, useDispatch } from "react-redux/es/exports";
 import { useState } from "react";
 import { useImmer } from "use-immer";
@@ -53,7 +55,9 @@ let initialValue = {
   email: "",
   phone: "",
   gender: "",
-  color: "#000000"
+  supervisor: "",
+  classIdWhoesSupervisor: {},
+  // color: "#000000"
 };
 
 function TeachersSettings({ teachersModal, closeTeachersModal }) {
@@ -71,10 +75,12 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
 
   async function passAction(action, payload) {
     setLoading(true)
-    await dispatch(action(payload))
+    await dispatch(action(payload));
+    await dispatch(fetchTable())
+    await dispatch(getClasses())
     setLoading(false)
   }
-  
+
   function onOpen(name) {
     name = name.toLowerCase();
     if (name == "edit") {
@@ -83,9 +89,10 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
         prev.lastName = selected[1].lastName;
         prev.shortName = selected[1].shortName;
         prev.phone = selected[1].phone;
-        prev.color = '#' + rgbHex(selected[1].color)
+        // prev.color = '#' + rgbHex(selected[1].color)
         prev.gender = selected[1].gender;
         prev.email = selected[1].email;
+        prev.supervisor = classes?.[Object.keys(selected[1].classIdWhoesSupervisor)[0]]?.longName
         prev.classIdWhoesSupervisor = { [Object.keys(selected[1].classIdWhoesSupervisor)[0]]: Object.keys(selected[1].classIdWhoesSupervisor)[0] }
       });
     }
@@ -99,9 +106,18 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
   }
 
   function onSet(e) {
-    setValue((prev) => {
-      prev[e.target.name] = e.target.value;
-    });
+    if (e.target.name == 'supervisor') {
+      let selectedOption = e.target.options.selectedIndex
+      setValue((prev) => {
+        prev.supervisor = e.target.value
+        prev.classIdWhoesSupervisor = { [e.target.options[selectedOption].id]: e.target.options[selectedOption].id };
+      });
+      return
+    } else {
+      setValue((prev) => {
+        prev[e.target.name] = e.target.value;
+      });
+    }
   }
 
   function setContext(name) {
@@ -127,9 +143,9 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
           return;
         }
       }
-      const [r, g, b] = hexRgb(value.color, {format: 'array'}).slice(0, -1)
+      // const [r, g, b] = hexRgb(value.color, {format: 'array'}).slice(0, -1)
 
-      passAction(addTeacher, {...value, color: `rgba(${r}, ${g}, ${b})`});
+      passAction(addTeacher, value);
       onClose(name);
       return;
     } else if (name == "edit") {
@@ -155,9 +171,9 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
           return;
         }
       }
-      const [r, g, b] = hexRgb(value.color, {format: 'array'}).slice(0, -1)
+      // const [r, g, b] = hexRgb(value.color, {format: 'array'}).slice(0, -1)
 
-      passAction(editTeacher, { teacherId: selected[0], data: {...value, color: `rgba(${r}, ${g}, ${b})`} });
+      passAction(editTeacher, { teacherId: selected[0], data: value });
       onClose(name);
       return;
     } else if (name == "delete") {
@@ -246,9 +262,10 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
             <label>{t("last name")}:</label>
             <label>{t("short-name")}:</label>
             <label>{t("gender")}:</label>
+            <label>{t("class of supervisor")}:</label>
             <label>{t("phone")}:</label>
             <label>{t("email")}:</label>
-            <label>{t("color")}:</label>
+            {/* <label>{t("color")}:</label> */}
           </div>
           <div className="input-block">
             <input
@@ -292,6 +309,23 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
               />{t('female')}
             </span>
             </div>
+            <select
+            value={value.supervisor}
+            onChange={onSet}
+            className="OSstyle"
+            name="supervisor"
+            >
+            <option value=""></option>
+            {Object.values(classes).map((item) => {
+            return <option 
+              id={item.classId} 
+              key={item.classId} 
+              value={item.longName}
+              >
+                {item.longName}
+              </option>
+            })}
+            </select>
             <input
               name="phone"
               value={value.phone}
@@ -306,7 +340,7 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
               type="email"
               placeholder={t("email")}
             />
-          <input name="color" value={value.color} onChange={onSet} type="color"/>
+          {/* <input name="color" value={value.color} onChange={onSet} type="color"/> */}
           </div>
           <div className="button-block">
             <button className="OSstyle" onClick={() => setContext("new")}>
@@ -331,9 +365,10 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
             <label>{t("last name")}:</label>
             <label>{t("short-name")}:</label>
             <label>{t("gender")}:</label>
+            <label>{t("class of supervisor")}:</label>
             <label>{t("phone")}:</label>
             <label>{t("email")}:</label>
-            <label>{t("color")}:</label>
+            {/* <label>{t("color")}:</label> */}
           </div>
           <div className="input-block">
             <input
@@ -377,6 +412,23 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
               />{t('female')}
             </span>
             </div>
+            <select
+            value={value.supervisor}
+            onChange={onSet}
+            className="OSstyle"
+            name="supervisor"
+            >
+            <option value=""></option>
+            {Object.values(classes).map((item) => {
+            return <option 
+              id={item.classId} 
+              key={item.classId} 
+              value={item.longName}
+              >
+                {item.longName}
+              </option>
+            })}
+            </select>
             <input
               name="phone"
               value={value.phone}
@@ -391,7 +443,7 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
               type="email"
               placeholder={t("email")}
             />
-          <input name="color" value={value.color} onChange={onSet} type="color"/>
+          {/* <input name="color" value={value.color} onChange={onSet} type="color"/> */}
           </div>
           <div className="button-block">
             <button className="OSstyle" onClick={() => setContext("edit")}>
@@ -421,7 +473,7 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
       </Modal>
       
       <LessonsModal 
-      section={selected && selected[1]}
+      sectionData={selected && {data: selected[1], section: 'teachers'}}
       lessonsModal={modal.lessons} 
       closeLessonsModal={onClose}
       />

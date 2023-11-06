@@ -296,7 +296,7 @@ function ClassroomsSettings({ classroomsModal, closeClassroomsModal }) {
       </Modal>
 
       <LessonsModal 
-      section={selected && selected[1]}
+      sectionData={selected && {data: selected[1], section: 'classrooms'}}
       lessonsModal={modal.lessons} 
       closeLessonsModal={onClose}
       />

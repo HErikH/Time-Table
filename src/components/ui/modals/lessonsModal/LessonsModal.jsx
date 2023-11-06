@@ -5,8 +5,12 @@ import { Modal } from "react-responsive-modal";
 import { addLesson, editLesson, deleteLesson } from "../../../../features/lessonsSlice";
 import { useSelector, useDispatch } from "react-redux/es/exports";
 import { useTranslation } from "react-i18next";
+import Loader from "../../loader/Loader";
 import "react-responsive-modal/styles.css";
 import "./style.scss";
+
+import { getFooterStacks } from "../../../../features/dragDropSlice";
+
 
 function selectionOptions(info) {
   let result = [];
@@ -63,6 +67,7 @@ let modalStates = {
   new: false,
   edit: false,
   delete: false,
+  error: false,
 };
 
 let initialValue = {
@@ -73,7 +78,7 @@ let initialValue = {
   count: 1,
 };
 
-function LessonsModal({ section, lessonsModal, closeLessonsModal }) {
+function LessonsModal({ sectionData: {data, section}, lessonsModal, closeLessonsModal }) {
   const initialFetch = useContext(GlobalContext)
   const teachers = useSelector((state) => state.teachers);
   const subjects = useSelector((state) => state.subjects);
@@ -94,15 +99,44 @@ function LessonsModal({ section, lessonsModal, closeLessonsModal }) {
   let [value, setValue] = useImmer(initialValue);
   let [collective, setCollective] = useImmer(collectiveInitialValue);
   let [selected, setSelected] = useState(false);
+  let [errorText, setErrorText] = useState('');
+  let [errorButtons, setErrorButtons] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   let { t } = useTranslation()
 
   async function passAction(action, payload = "Haven't been passed any value") {
+    setLoading(true)
     await dispatch(action(payload));
     await initialFetch()
+    setLoading(false)
   }
 
   function onOpen(name) {
+    if (name == 'new') {
+      setCollective((prev) => {
+        section == "subjects" ?
+        prev.subjectId = data.subjectId :
+        section == "classes" ?
+        prev.classesId[data.classId] = data.classId :
+        section == "classrooms" ?
+        prev.classRoomsId[data.classRoomId] = data.classRoomId :
+        section == "teachers" ?
+        prev.teachersId[data.teacherId] = data.teacherId : 
+        ''
+      })
+      setValue((prev) => {
+        section == "subjects" ?
+        prev.subject = subjects[data.subjectId].longName :
+        section == "classes" ?
+        prev.class = classes[data.classId].longName :
+        section == "classrooms" ?
+        prev.classroom = classrooms[data.classRoomId].longName :
+        section == "teachers" ?
+        prev.teacher = teachers[data.teacherId].name : 
+        ''
+      }) 
+    }
     if (name == "edit") {
       setCollective((prev) => {
         prev.teachersId[Object.keys(selected[1].teachersId)[0]] = Object.keys(selected[1].teachersId)[0]
@@ -123,15 +157,17 @@ function LessonsModal({ section, lessonsModal, closeLessonsModal }) {
   }
 
   function onClose(name) {
-    name && setModal({ ...modal, [name]: false });
-    closeLessonsModal("lessons")
-    setSelected(false);
+    name && setModal({ ...modal, [name]: false })
+    // closeLessonsModal("lessons")
+    setErrorButtons(false)
+    setSelected(false)
     setCollective(collectiveInitialValue)
-    setValue(initialValue);
+    setValue(initialValue)
   }
 
   function onSet(e) {
     let selectedOption = e.target.options.selectedIndex
+
     setValue((prev) => {
       prev[e.target.name] = e.target.value;
     });
@@ -163,52 +199,79 @@ function LessonsModal({ section, lessonsModal, closeLessonsModal }) {
     })
   }
 
+  function setContextImmediately() {
+    passAction(addLesson, collective)
+    onClose('error')
+  }
+
   function setContext(name) {
-    if (name == "new") {
-    if(!value.teacher || !value.subject || !value.class || !value.classroom) {
-        onOpen("error");
-        return;
-    }
-    //   for (const key in classes) {
-    //     if (
-    //       String(classes[key].longName).toLowerCase() == value.longName.toLowerCase()
-    //       ) {
-    //       onOpen("error");
-    //       return;
-    //     }
-    //   }
-      passAction(addLesson, collective)
-      onClose(name);
-      return;
-    } else if (name == "edit") {
-      // for (const key in classes) {
-      //   if (
-      //     String(classes[key].longName).toLowerCase() == value.longName.toLowerCase() &&
-      //     classes[key].classId != selected[0]
-      //   ) {
-      //     onOpen("error");
-      
-      //     return;
-      //   }
-      // }
-      passAction(editLesson, { ...collective, lessonId: selected[0]});
-      onClose(name);
-      return;
-    } else if (name == "delete") {
+    if (name == 'delete') {
       passAction(deleteLesson, selected[0]);
       onClose(name);
+      return
+    }
+    if(!value.teacher || !value.subject || !value.class || !value.classroom) {
+      setErrorText(t("necessary inputs"))
+      onOpen("error");
       return;
+    } else if (value.subject && section == "subjects" && value.subject != subjects[data.subjectId].longName) {
+      setErrorText(`
+      ${t('you currently editing lesson for subject')}(${subjects[data.subjectId].longName})
+      ${t('however, you have just inputted a subject')}(${value.subject})
+      ${t('do you want to continue and add this lesson anyway ?')}
+      `)
+      setErrorButtons(true)
+      onOpen("error")
+      return
+    } else if (value.class && section == "classes" && value.class != classes[data.classId].longName) {
+      setErrorText(`
+      ${t('you currently editing lesson for class')}(${classes[data.classId].longName})
+      ${t('however, you have just inputted a class')}(${value.class})
+      ${t('do you want to continue and add this lesson anyway ?')}
+      `)
+      setErrorButtons(true)
+      onOpen("error")
+      return
+    } else if (value.classroom && section == "classrooms" && value.classroom != classrooms[data.classRoomId].longName) {
+      setErrorText(`
+      ${t('you currently editing lesson for classroom')}(${classrooms[data.classRoomId].longName})
+      ${t('however, you have just inputted a classroom')}(${value.classroom})
+      ${t('do you want to continue and add this lesson anyway ?')}
+      `)
+      setErrorButtons(true)
+      onOpen("error")
+      return
+    } else if (value.teacher && section == "teachers" && value.teacher != teachers[data.teacherId].name) {
+      setErrorText(`
+      ${t('you currently editing lesson for teacher')}(${teachers[data.teacherId].name})
+      ${t('however, you have just inputted a teacher')}(${value.teacher})
+      ${t('do you want to continue and add this lesson anyway ?')}
+      `)
+      setErrorButtons(true)
+      onOpen("error")
+      return
     } else {
-      return;
+      passAction(
+      name == 'new' ? addLesson : editLesson, 
+      name == 'new' ? collective : { ...collective, lessonId: selected[0]}
+      )
+      onClose(name);
     }
   }
 
   return (
+    loading ?
+    <Loader /> :
     <>
       <Modal
         classNames={{ modal: "lessons-settings" }}
         open={lessonsModal}
-        onClose={onClose}
+        onClose={() => {
+        closeLessonsModal('lessons')
+        setSelected(false)
+        setCollective(collectiveInitialValue)
+        setValue(initialValue)
+        }}
         center
       >
         <main className="container">
@@ -221,7 +284,7 @@ function LessonsModal({ section, lessonsModal, closeLessonsModal }) {
               </tr>
             </thead>
             <tbody>
-              {section && Object.values(section?.lessons).map((id) => {
+              {data && Object.values(data?.lessons).map((id) => {
                 return Object.entries({[id]: lessons[id]}).map((item) => {
                   return (
                     <tr
@@ -451,8 +514,19 @@ function LessonsModal({ section, lessonsModal, closeLessonsModal }) {
         onClose={() => onClose("error")}
         center
       >
-        {t("necessary inputs")}
-      </Modal>
+        {errorText}
+        {errorButtons && (
+          <div className="button-block">
+          <button className="OSstyle" onClick={setContextImmediately}>
+            {t("ok")}
+          </button>
+          <button className="OSstyle" onClick={() => onClose("error")}>
+            {t("cancel")}
+          </button>
+          </div>
+        )
+        }
+      </Modal> 
     </>
   );
 }

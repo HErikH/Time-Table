@@ -67,7 +67,7 @@ function Timetable({ available, setLessonPeriod }) {
 
   async function deletePlacedLesson(placeId, lessonId) {
     await dispatch(deleteFooterStacksDrag({placeId, lessonId}))
-    initialFetch()
+    await initialFetch()
     setLessonPeriod(false)
   }
 

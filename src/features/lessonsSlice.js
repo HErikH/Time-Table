@@ -17,7 +17,7 @@ export const addLesson = createAsyncThunk(
   async function (payload) {
     let { teachersId, classesId, classRoomsId, ...rest } =
       structuredClone(payload);
-    classesId[Object.keys(classesId)[0]] = {
+      classesId[Object.keys(classesId)[0]] = {
       chapterId: "all",
       groupId: "all",
     };
@@ -68,8 +68,8 @@ export const deleteLesson = createAsyncThunk(
       "lessons/delete",
       { tableId: 1, lessonId: payload },
       "post"
-    );
-    return JSON.parse(response.data.table.lessons);
+      );
+      return JSON.parse(response.data.table.lessons);
   }
 );
 

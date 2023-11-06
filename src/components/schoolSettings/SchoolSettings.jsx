@@ -93,7 +93,7 @@ function SchoolSettings({ schoolModal, closeSchoolModal }) {
   async function passAction(action, payload) {
     setLoading(true)
     await dispatch(action(payload))
-    await dispatch(initialFetch())
+    await initialFetch()
     setLoading(false)
   }
 

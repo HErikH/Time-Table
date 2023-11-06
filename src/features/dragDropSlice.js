@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
 import { v4 as uuidV4 } from "uuid";
 import fetchDataFromApi from "../utils/api.js";
 
-let initialState = { error: false };
+let initialState = { error: false, stacks: {} };
 
 export const updateFooterStacksDrag = createAsyncThunk(
   "dragDrop/updateFooterStacksDrag",
@@ -57,43 +57,36 @@ const dragDropSlice = createSlice({
   reducers: {
     changeFooterStacks(state, { payload }) {
       let next = {};
-      let { lessons, subjects, teachers, classes, classrooms } =
-        structuredClone(payload);
+      let { lessons, subjects, teachers, classes, classrooms } = structuredClone(payload);
 
       for (const key in lessons) {
         let unIdStack = lessons[key].lessonId;
-        next["footerStack" + unIdStack] = {
+        next["footerStack" + unIdStack] = { 
           id: "footerStack" + unIdStack,
           lessonId: unIdStack,
           classesId: lessons[key].classesId,
           content: {},
         };
-        for (
-          let i = 0;
-          i <
-          lessons[key].lessonsCount - Object.keys(lessons[key].places).length;
-          i++
-        ) {
-          let unIdContent = uuidV4();
 
+        for (let i = 0; i < lessons[key].lessonsCount - Object.keys(lessons[key].places).length; i++) {
+          let unIdContent = uuidV4();
           next["footerStack" + unIdStack].content[unIdContent] = {
             contentId: unIdContent,
             subjectShortName: subjects[lessons[key].subjectId].shortName,
             subjectLongName: subjects[lessons[key].subjectId].longName,
             subjectColor: subjects[lessons[key].subjectId].color,
             teacherName: teachers[Object.keys(lessons[key].teachersId)[0]].name,
-            classLongName:
-              classes[Object.keys(lessons[key].classesId)[0]].longName,
-            classroomLongName:
-              classrooms[Object.keys(lessons[key].classRoomsId)[0]].longName,
-            lessonsCount: lessons[key].lessonsCount,
+            classLongName: classes[Object.keys(lessons[key].classesId)[0]].longName,
+            classroomLongName: classrooms[Object.keys(lessons[key].classRoomsId)[0]].longName,
+            lessonsCount: lessons[key].lessonsCount
           };
         }
       }
-
-      return { ...state, ...next };
+      
+      state.stacks = next
     },
   },
+
   extraReducers: (builder) => {
     builder
       .addCase(updateFooterStacksDrag.rejected, (state, { payload }) => {

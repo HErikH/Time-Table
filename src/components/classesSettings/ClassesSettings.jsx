@@ -351,7 +351,7 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
       </Modal>
 
       <LessonsModal 
-      section={selected && selected[1]}
+      sectionData={selected && {data: selected[1], section: 'classes'}}
       lessonsModal={modal.lessons} 
       closeLessonsModal={onClose}
       />

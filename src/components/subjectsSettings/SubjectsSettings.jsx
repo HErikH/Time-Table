@@ -1,5 +1,5 @@
 import { addSubject, editSubject, deleteSubject } from "../../features/subjectsSlice";
-import { getFooterStacks } from "../../features/dragDropSlice";
+import { GlobalContext } from "../../App";
 import { useSelector, useDispatch } from "react-redux/es/exports";
 import { useTranslation } from "react-i18next";
 import { useState, useContext } from "react";
@@ -57,6 +57,7 @@ function SubjectsSettings({ subjectsModal, closeSubjectsModal }) {
   const subjects = useSelector(state => state.subjects)
   const dispatch = useDispatch()
 
+  const initialFetch = useContext(GlobalContext)
   let [modal, setModal] = useState(modalStates);
   let [value, setValue] = useImmer(initialValue);
   let [selected, setSelected] = useState(false);
@@ -68,7 +69,7 @@ function SubjectsSettings({ subjectsModal, closeSubjectsModal }) {
   async function passAction(action, payload) {
     setLoading(true)
     await dispatch(action(payload))
-    await dispatch(getFooterStacks())
+    await initialFetch()
     setLoading(false)
   }
   

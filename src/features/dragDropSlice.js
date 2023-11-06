@@ -77,7 +77,7 @@ const dragDropSlice = createSlice({
             subjectColor: subjects[lessons[key].subjectId].color,
             teacherName: teachers[Object.keys(lessons[key].teachersId)[0]].name,
             classLongName: classes[Object.keys(lessons[key].classesId)[0]].longName,
-            classroomLongName: classrooms[Object.keys(lessons[key].classRoomsId)[0]].longName,
+            classroomLongName: Object.keys(lessons[key].classRoomsId).length ? classrooms[Object.keys(lessons[key].classRoomsId)[0]].longName : '',
             lessonsCount: lessons[key].lessonsCount
           };
         }

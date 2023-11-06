@@ -72,6 +72,16 @@
   "class exists": "The class already exists !",
   "subject exists": "The subject already exists !",
   "classroom exists": "The classroom already exists !",
-  "necessary inputs": "The teacher, subject, classroom and class must be entered !"
+  "not specified": "Not specified",
+  "necessary inputs": "The teacher, subject and class must be entered !",
+  "you are currently editing lesson for subject": "You are currently editing lesson for subject",
+  "you are currently editing lesson for class": "You are currently editing lesson for class",
+  "you are currently editing lesson for classroom": "You are currently editing lesson for classroom",
+  "you are currently editing lesson for teacher": "You are currently editing lesson for teacher",
+  "however you have just inputted a subject": "however, you have just inputted a subject",
+  "however you have just inputted a class": "however, you have just inputted a class",
+  "however you have just inputted a classroom": "however, you have just inputted a classroom",
+  "however you have just inputted a teacher": "however, you have just inputted a teacher",
+  "do you want to continue and add this lesson anyway ?": "do you want to continue and add this lesson anyway ?"
 }
 

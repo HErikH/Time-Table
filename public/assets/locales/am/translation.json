@@ -72,5 +72,15 @@
     "class exists": "Դասարանը արդեն կա !",
     "subject exists": "Առարկան արդեն գոյություն ունի !",
     "classroom exists": "Դասասենյակն արդեն գոյություն ունի !",
-    "necessary inputs": "Պետք է մուտքագրել ուսուցիչը, առարկան, դասասենյակը և դասարանը !"
+    "not specified": "Նշված չէ",
+    "necessary inputs": "Պետք է մուտքագրել ուսուցիչը, առարկան և դասարանը !",
+    "you are currently editing lesson for subject": "Դուք ներկայումս խմբագրում եք դասը առարկայի համար",
+    "you are currently editing lesson for class": "Դուք ներկայումս խմբագրում եք դասը դասարանի համար",
+    "you are currently editing lesson for classroom": "Դուք ներկայումս խմբագրում եք դասը դասասենյակի համար",
+    "you are currently editing lesson for teacher": "Դուք ներկայումս խմբագրում եք դասը ուսուցչի համար",
+    "however you have just inputted a subject": "սակայն, դուք նոր մուտքագրեցիք առարկա",
+    "however you have just inputted a class": "սակայն, դուք նոր մուտքագրեցիք դասարան",
+    "however you have just inputted a classroom": "սակայն, դուք նոր մուտքագրեցիք դասասենյակ",
+    "however you have just inputted a teacher": "սակայն, դուք նոր մուտքագրեցիք ուսուցիչ",
+    "do you want to continue and add this lesson anyway ?": "ուզու՞մ եք ամեն դեպքում շարունակել և ավելացնել այս դասը"
   }

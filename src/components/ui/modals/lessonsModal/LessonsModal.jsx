@@ -137,20 +137,23 @@ function LessonsModal({ sectionData: {data, section}, lessonsModal, closeLessons
         ''
       }) 
     }
+
     if (name == "edit") {
       setCollective((prev) => {
         prev.teachersId[Object.keys(selected[1].teachersId)[0]] = Object.keys(selected[1].teachersId)[0]
         prev.subjectId = selected[1].subjectId
         prev.classesId[Object.keys(selected[1].classesId)[0]] = Object.keys(selected[1].classesId)[0]
-        prev.classRoomsId[Object.keys(selected[1].classRoomsId)[0]] = Object.keys(selected[1].classRoomsId)[0]
+        prev.classRoomsId[Object.keys(selected[1].classRoomsId)[0]] = Object.keys(selected[1].classRoomsId).length ? 
+        Object.keys(selected[1].classRoomsId)[0] : ''
         prev.lessonsCount = selected[1].lessonsCount
       })
       setValue((prev) => {
         prev.teacher = teachers[Object.keys(selected[1].teachersId)[0]].name
         prev.subject = subjects[selected[1].subjectId].longName
         prev.class = classes[Object.keys(selected[1].classesId)[0]].longName
-        prev.classroom = classrooms[Object.keys(selected[1].classRoomsId)[0]].longName
-        prev.count = selected[1].lessonsCount
+        prev.classroom = Object.keys(selected[1].classRoomsId).length ? 
+        classrooms[Object.keys(selected[1].classRoomsId)[0]].longName : ''
+        prev.count = selected[1].lessonsCount 
       });
     }
     setModal({ ...modal, [name]: true });
@@ -210,14 +213,14 @@ function LessonsModal({ sectionData: {data, section}, lessonsModal, closeLessons
       onClose(name);
       return
     }
-    if(!value.teacher || !value.subject || !value.class || !value.classroom) {
+    if(!value.teacher || !value.subject || !value.class) {
       setErrorText(t("necessary inputs"))
       onOpen("error");
       return;
     } else if (value.subject && section == "subjects" && value.subject != subjects[data.subjectId].longName) {
       setErrorText(`
-      ${t('you currently editing lesson for subject')}(${subjects[data.subjectId].longName})
-      ${t('however, you have just inputted a subject')}(${value.subject})
+      ${t('you are currently editing lesson for subject')}(${subjects[data.subjectId].longName})
+      ${t('however you have just inputted a subject')}(${value.subject})
       ${t('do you want to continue and add this lesson anyway ?')}
       `)
       setErrorButtons(true)
@@ -225,8 +228,8 @@ function LessonsModal({ sectionData: {data, section}, lessonsModal, closeLessons
       return
     } else if (value.class && section == "classes" && value.class != classes[data.classId].longName) {
       setErrorText(`
-      ${t('you currently editing lesson for class')}(${classes[data.classId].longName})
-      ${t('however, you have just inputted a class')}(${value.class})
+      ${t('you are currently editing lesson for class')}(${classes[data.classId].longName})
+      ${t('however you have just inputted a class')}(${value.class})
       ${t('do you want to continue and add this lesson anyway ?')}
       `)
       setErrorButtons(true)
@@ -234,8 +237,8 @@ function LessonsModal({ sectionData: {data, section}, lessonsModal, closeLessons
       return
     } else if (value.classroom && section == "classrooms" && value.classroom != classrooms[data.classRoomId].longName) {
       setErrorText(`
-      ${t('you currently editing lesson for classroom')}(${classrooms[data.classRoomId].longName})
-      ${t('however, you have just inputted a classroom')}(${value.classroom})
+      ${t('you are currently editing lesson for classroom')}(${classrooms[data.classRoomId].longName})
+      ${t('however you have just inputted a classroom')}(${value.classroom})
       ${t('do you want to continue and add this lesson anyway ?')}
       `)
       setErrorButtons(true)
@@ -243,8 +246,8 @@ function LessonsModal({ sectionData: {data, section}, lessonsModal, closeLessons
       return
     } else if (value.teacher && section == "teachers" && value.teacher != teachers[data.teacherId].name) {
       setErrorText(`
-      ${t('you currently editing lesson for teacher')}(${teachers[data.teacherId].name})
-      ${t('however, you have just inputted a teacher')}(${value.teacher})
+      ${t('you are currently editing lesson for teacher')}(${teachers[data.teacherId].name})
+      ${t('however you have just inputted a teacher')}(${value.teacher})
       ${t('do you want to continue and add this lesson anyway ?')}
       `)
       setErrorButtons(true)

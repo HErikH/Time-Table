@@ -105,6 +105,7 @@ function Timetable({ available, setLessonPeriod }) {
                           {Object.values(classItem.lessons).map((lessonId) => {
                               return lessons[lessonId] && Object.values(lessons[lessonId].places).map((place) => {
                                 if (place.dayId == day.dayId && place.hourId == hour.hourId) {
+                                  console.log(lessons[lessonId].classRoomsId)
                                   return (
                                   <div 
                                   key={place.hourId} 
@@ -113,7 +114,7 @@ function Timetable({ available, setLessonPeriod }) {
                                   onMouseEnter={() => setLessonPeriod({
                                     teacherName: teachers[Object.keys(lessons[lessonId].teachersId)[0]].name,
                                     subjectLongName: subjects[lessons[lessonId].subjectId].longName,
-                                    classroomLongName: classrooms[Object.keys(lessons[lessonId].classRoomsId)[0]].longName,
+                                    classroomLongName: Object.keys(lessons[lessonId].classRoomsId).length ? classrooms[Object.keys(lessons[lessonId].classRoomsId)[0]].longName : '',
                                     timeStart: hour.timeStart, 
                                     timeEnd: hour.timeEnd
                                   })}

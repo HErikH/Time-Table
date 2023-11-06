@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { GlobalContext } from "../../../App";
+// import { GlobalContext } from "../../../App";
 import { useSelector } from "react-redux/es/exports";
 import Movable from "../../ui/moveElement/Movable";
 import { useTranslation } from "react-i18next";
@@ -11,6 +11,7 @@ function LessonsStack({ setAvailable, lessonPeriod }) {
 
   let [reviewState, setReviewState] = useState(false)
   let [clicked, setClicked] = useState(false)
+
   const { t } = useTranslation()
 
   function hoverHandler(item, classId) { 
@@ -87,7 +88,7 @@ function LessonsStack({ setAvailable, lessonPeriod }) {
           </div>
           <p>{`${t("class name")} - ${reviewState.classLongName}`}</p>
           <p>{`${t("teacher")} - ${reviewState.teacherName}`}</p>
-          <p>{`${t("classroom name")} - ${reviewState.classroomLongName}`}</p>
+          <p>{`${t("classroom name")} - ${reviewState.classroomLongName || t("not specified")}`}</p>
           <p>{`${t("lessons count")} - ${reviewState.lessonsCount}`}</p>
           </>
           )}
@@ -95,7 +96,7 @@ function LessonsStack({ setAvailable, lessonPeriod }) {
             <>
             <p>{`${t("subject title")} - ${lessonPeriod.subjectLongName}`}</p>
             <p>{`${t("teacher")} - ${lessonPeriod.teacherName}`}</p>
-            <p>{`${t("classroom name")} - ${lessonPeriod.classroomLongName}`}</p>
+            <p>{`${t("classroom name")} - ${lessonPeriod.classroomLongName || t("not specified")}`}</p>
             <p>{`${t("start time")} - ${lessonPeriod.timeStart}`}</p>
             <p>{`${t("end time")} - ${lessonPeriod.timeEnd}`}</p>
             </>

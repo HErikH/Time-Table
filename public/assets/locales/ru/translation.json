@@ -71,5 +71,15 @@
     "teacher exists": "Класс уже существует !",
     "class exists": "Класс уже существует !",
     "subject exists": "Предмет уже существует !",
-    "necessary inputs": "Необходимо указать преподавателя, предмет, кабинет и класс !"
+    "not specified": "Не указан",
+    "necessary inputs": "Необходимо указать преподавателя, предмет и класс !",
+    "you are currently editing lesson for subject": "Вы сейчас редактируете урок по предмете",
+    "you are currently editing lesson for class": "Вы сейчас редактируете урок для класса",
+    "you are currently editing lesson for classroom": "Вы сейчас редактируете урок для кабинета",
+    "you are currently editing lesson for teacher": "Вы сейчас редактируете урок для учителя",
+    "however you have just inputted a subject": "однако, вы только что ввели предмет",
+    "however you have just inputted a class": "однако, вы только что ввели класс",
+    "however you have just inputted a classroom": "однако, вы только что ввели кабинет",
+    "however you have just inputted a teacher": "однако, вы только что ввели учителя",
+    "do you want to continue and add this lesson anyway ?": "вы все равно хотите продолжить и добавить этот урок ?"
 }

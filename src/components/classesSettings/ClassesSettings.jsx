@@ -1,10 +1,9 @@
 import { addClass, editClass, deleteClass } from "../../features/classesSlice";
-import { getTeachers } from "../../features/teachersSlice";
-import { fetchTable } from "../../features/timTableSlice";
+import { GlobalContext } from "../../App";
 import { useSelector, useDispatch } from "react-redux/es/exports";
 import { useTranslation } from "react-i18next";
 import { useImmer } from "use-immer";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import LessonsModal from "../ui/modals/lessonsModal/LessonsModal";
 import { Modal } from "react-responsive-modal";
 import "react-responsive-modal/styles.css";
@@ -58,6 +57,7 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
   const teachers = useSelector((state) => state.teachers)
   const dispatch = useDispatch();
 
+  const initialFetch = useContext(GlobalContext)
   let [modal, setModal] = useState(modalStates);
   let [value, setValue] = useImmer(initialValue);
   let [selected, setSelected] = useState(false);
@@ -69,8 +69,7 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
   async function passAction(action, payload) {
     setLoading(true)
     await dispatch(action(payload));
-    await dispatch(fetchTable())
-    await dispatch(getTeachers())
+    await initialFetch()
     setLoading(false)
   }
 

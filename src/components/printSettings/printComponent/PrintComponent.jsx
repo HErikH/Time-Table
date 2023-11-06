@@ -16,7 +16,6 @@ function PrintComponent({ lessonsData, section }) {
   const { t } = useTranslation()
 
   useEffect(() => {
-    // dasacucak dasarani u dasatuyi
     section == 'classes' ? 
     setDocumentTitle(t('class timetable')+ ':' + ' ' + lessonsData.longName) :
     section == 'teachers' ?
@@ -89,7 +88,8 @@ function PrintComponent({ lessonsData, section }) {
                                     <span style={{float: 'left', fontSize: '12px'}}>
                                       {
                                         section == 'classes' ?
-                                        classrooms[Object.keys(lessons[lessonId].classRoomsId)[0]].shortName :
+                                        (Object.keys(lessons[lessonId].classRoomsId).length ? 
+                                        classrooms[Object.keys(lessons[lessonId].classRoomsId)[0]].shortName : '') :
                                         section == 'teachers' ?
                                         subjects[lessons[lessonId].subjectId].shortName :
                                         ''
@@ -100,7 +100,8 @@ function PrintComponent({ lessonsData, section }) {
                                         section == 'classes' ?
                                         teachers[Object.keys(lessons[lessonId].teachersId)[0]].name :
                                         section == 'teachers' ?
-                                        classrooms[Object.keys(lessons[lessonId].classRoomsId)[0]].shortName :
+                                        (Object.keys(lessons[lessonId].classRoomsId).length ? 
+                                        classrooms[Object.keys(lessons[lessonId].classRoomsId)[0]].shortName : '') :
                                         ''
                                       }
                                     </span>

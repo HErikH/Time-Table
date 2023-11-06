@@ -1,8 +1,7 @@
 import { addTeacher, editTeacher, deleteTeacher } from '../../features/teachersSlice'
-import { fetchTable } from "../../features/timTableSlice";
-import { getClasses } from '../../features/classesSlice';
+import { GlobalContext } from "../../App";
 import { useSelector, useDispatch } from "react-redux/es/exports";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useImmer } from "use-immer";
 import { useTranslation } from 'react-i18next';
 import { Modal } from "react-responsive-modal";
@@ -13,8 +12,8 @@ import { BiPlusCircle } from "react-icons/bi";
 import { FaGraduationCap } from "react-icons/fa";
 import { MdOutlineRemoveCircleOutline } from "react-icons/md";
 import { HiOutlineSquare2Stack } from "react-icons/hi2"
-import hexRgb from "hex-rgb";
-import rgbHex from 'rgb-hex';
+// import hexRgb from "hex-rgb";
+// import rgbHex from 'rgb-hex';
 import "./style.scss";
 
 let buttonData = [
@@ -65,6 +64,7 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
   const classes = useSelector((state) => state.classes);
   const dispatch = useDispatch();
 
+  const initialFetch = useContext(GlobalContext)
   let [modal, setModal] = useState(modalStates);
   let [value, setValue] = useImmer(initialValue);
   let [selected, setSelected] = useState(false);
@@ -76,8 +76,7 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
   async function passAction(action, payload) {
     setLoading(true)
     await dispatch(action(payload));
-    await dispatch(fetchTable())
-    await dispatch(getClasses())
+    await initialFetch()
     setLoading(false)
   }
 

@@ -17,9 +17,9 @@ function PrintComponent({ lessonsData, section }) {
 
   useEffect(() => {
     section == 'classes' ? 
-    setDocumentTitle(t('class timetable')+ ':' + ' ' + lessonsData.longName) :
+    setDocumentTitle(t('class timetable')+ ':' + ' ' + (lessonsData ? lessonsData.longName : '')) :
     section == 'teachers' ?
-    setDocumentTitle(t('teacher timetable')+ ':' + ' ' + lessonsData.name) :
+    setDocumentTitle(t('teacher timetable')+ ':' + ' ' + (lessonsData ? lessonsData.name : '')) :
     ''
   }, [section, lessonsData])
 
@@ -29,15 +29,15 @@ function PrintComponent({ lessonsData, section }) {
         <h3 style={{textAlign: 'center'}}>
         {
         section == 'classes' ?
-        t('class name')+ ':' + ' ' + lessonsData.longName :
+        t('class name')+ ':' + ' ' + (lessonsData ? lessonsData.longName : '') :
         section == 'teachers' ?
-        t('teacher')+ ':' + ' ' + lessonsData.name : ''
+        t('teacher')+ ':' + ' ' + (lessonsData ? lessonsData.name : '') : ''
         }
         </h3>
         <h5 style={{textAlign: 'center'}}>
         {
         section == 'classes' &&
-        t('class supervisor')+ ':' + ' ' + teachers?.[Object.keys(lessonsData.classSupervisors)[0]]?.name
+        t('class supervisor')+ ':' + ' ' + (lessonsData ? teachers[Object.keys(lessonsData.classSupervisors)[0]]?.name : '')
         }
         </h5>
         <table className="print-timetable">
@@ -62,7 +62,7 @@ function PrintComponent({ lessonsData, section }) {
                   {Object.entries(day[1].hours).map((hour) => {
                     return (
                       <td key={hour[0]}>
-                        {Object.values(lessonsData.lessons).map((lessonId) => {
+                        {lessonsData && Object.values(lessonsData.lessons).map((lessonId) => {
                           return (
                             lessons[lessonId] &&
                             Object.values(lessons[lessonId].places).map(
@@ -79,9 +79,11 @@ function PrintComponent({ lessonsData, section }) {
                                     <p style={{textAlign: 'center'}}>
                                       {
                                         section == 'classes' ?
-                                        subjects[lessons[lessonId].subjectId].shortName :
+                                        (lessons[lessonId].subjectId ? 
+                                        subjects[lessons[lessonId].subjectId].shortName : '') :
                                         section == 'teachers' ?
-                                        classes[Object.keys(lessons[lessonId].classesId)[0]].shortName :
+                                        (Object.keys(lessons[lessonId].classesId).length ? 
+                                        classes[Object.keys(lessons[lessonId].classesId)[0]].shortName : '') :
                                         ''
                                       }
                                     </p>
@@ -91,14 +93,16 @@ function PrintComponent({ lessonsData, section }) {
                                         (Object.keys(lessons[lessonId].classRoomsId).length ? 
                                         classrooms[Object.keys(lessons[lessonId].classRoomsId)[0]].shortName : '') :
                                         section == 'teachers' ?
-                                        subjects[lessons[lessonId].subjectId].shortName :
+                                        (lessons[lessonId].subjectId ? 
+                                        subjects[lessons[lessonId].subjectId].shortName : '') :
                                         ''
                                       }
                                     </span>
                                     <span style={{float: 'right',fontSize: '12px'}}>
                                       {
                                         section == 'classes' ?
-                                        teachers[Object.keys(lessons[lessonId].teachersId)[0]].name :
+                                        (Object.keys(lessons[lessonId].teachersId).length ?
+                                        teachers[Object.keys(lessons[lessonId].teachersId)[0]].name : '') :
                                         section == 'teachers' ?
                                         (Object.keys(lessons[lessonId].classRoomsId).length ? 
                                         classrooms[Object.keys(lessons[lessonId].classRoomsId)[0]].shortName : '') :

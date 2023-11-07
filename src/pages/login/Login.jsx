@@ -3,6 +3,7 @@ import { FaUserTie } from "react-icons/fa";
 import { BiSolidLockAlt } from "react-icons/bi";
 import { BsChevronRight } from "react-icons/bs";
 import { useCookies } from "react-cookie";
+import { useTranslation } from "react-i18next";
 import fetchDataFromApi from "../../utils/api.js";
 import Modal from "react-responsive-modal";
 import Loader from "../../components/ui/loader/Loader.jsx";
@@ -13,6 +14,8 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState({ username: "", password: "" });
   const [errorModal, setErrorModal] = useState({ modal: false, error: "" });
+
+  const { t } = useTranslation()
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -48,7 +51,7 @@ function Login() {
                 }
                 type="text"
                 className="login__input"
-                placeholder="Username"
+                placeholder={t('username')}
               />
             </div>
             <div className="login__field">
@@ -60,11 +63,11 @@ function Login() {
                 }
                 type="password"
                 className="login__input"
-                placeholder="Password"
+                placeholder={t('password')}
               />
             </div>
             <button className="button login__submit">
-              <span className="button__text">Log In</span>
+              <span className="button__text">{t('login')}</span>
               <BsChevronRight className="button__icon" />
             </button>
           </form>
@@ -86,8 +89,7 @@ function Login() {
         center
       >
         <span>
-          {errorModal.error.charAt(0)?.toUpperCase() +
-            errorModal.error?.slice(1)}
+          {t(errorModal.error)}
         </span>
       </Modal>
     </div>

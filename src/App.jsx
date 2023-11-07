@@ -72,7 +72,8 @@ function App() {
   }, [cookies.uid]);
 
   return !cookies.uid ? (
-    <Login />
+   [<Login />,
+    <LanguageModalDynamic />]
   ) : loading ? (
     <Loader />
   ) : (

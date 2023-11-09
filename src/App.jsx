@@ -46,7 +46,7 @@ function App() {
   async function initialFetch(result) {
     setLoading(true);
 
-    result && (await dispatch(updateFooterStacksDrag(result)));
+    result && await dispatch(updateFooterStacksDrag(result));
     await dispatch(fetchTable());
     await dispatch(getClassrooms());
     await dispatch(getClasses());
@@ -54,7 +54,7 @@ function App() {
     await dispatch(getTeachers());
     await dispatch(getLessons());
     await dispatch(getFooterStacks());
-    
+
     setLoading(false);
   }
 
@@ -72,8 +72,10 @@ function App() {
   }, [cookies.uid]);
 
   return !cookies.uid ? (
-   [<Login />,
-    <LanguageModalDynamic />]
+  <>
+    <LanguageModalDynamic />
+    <Login />
+  </>
   ) : loading ? (
     <Loader />
   ) : (

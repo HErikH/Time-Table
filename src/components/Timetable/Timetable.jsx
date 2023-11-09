@@ -105,7 +105,6 @@ function Timetable({ available, setLessonPeriod }) {
                           {Object.values(classItem.lessons).map((lessonId) => {
                               return lessons[lessonId] && Object.values(lessons[lessonId].places).map((place) => {
                                 if (place.dayId == day.dayId && place.hourId == hour.hourId) {
-                                  console.log(lessons[lessonId].classRoomsId)
                                   return (
                                   <div 
                                   key={place.hourId} 

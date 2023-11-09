@@ -99,9 +99,11 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
   }
 
   function onClose(name) {
+    if (name != 'error') {
+      setValue(initialValue)
+      setSelected(false)
+    }
     setModal({ ...modal, [name]: false });
-    setSelected(false);
-    setValue(initialValue);
   }
 
   function onSet(e) {
@@ -216,7 +218,16 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
                     <td>{item[1].lastName}</td>
                     <td>{item[1].wholeLessonsCount}</td>
                     <td>
-                      {classes?.[Object.keys(item[1].classIdWhoesSupervisor)[0]]?.longName}
+                    <div className='whoseSupervisorDropdown'>
+                        <span>{classes?.[Object.keys(item[1].classIdWhoesSupervisor)[0]]?.longName}</span>
+                        <div className='whoseSupervisorDropdownContent'>
+                          {Object.values(item[1].classIdWhoesSupervisor).slice(1).map((classOfSupervisor) => {
+                          return (
+                          <p key={classOfSupervisor}>
+                            {classes?.[classOfSupervisor]?.longName}
+                          </p>)})}
+                        </div>
+                    </div>
                     </td>
                     <td>{t(item[1].gender)}</td>
                     <td>{item[1].phone}</td>

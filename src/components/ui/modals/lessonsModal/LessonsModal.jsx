@@ -80,6 +80,7 @@ let initialValue = {
 
 function LessonsModal({ sectionData: {data, section}, lessonsModal, closeLessonsModal }) {
   const initialFetch = useContext(GlobalContext)
+  const table = useSelector((state) => state.timeTable)
   const teachers = useSelector((state) => state.teachers);
   const subjects = useSelector((state) => state.subjects);
   const classes = useSelector((state) => state.classes);
@@ -160,12 +161,13 @@ function LessonsModal({ sectionData: {data, section}, lessonsModal, closeLessons
   }
 
   function onClose(name) {
-    name && setModal({ ...modal, [name]: false })
-    // closeLessonsModal("lessons")
+    if (name != 'error') {
+      setSelected(false)
+      setCollective(collectiveInitialValue)
+      setValue(initialValue)
+    }
+    setModal({ ...modal, [name]: false })
     setErrorButtons(false)
-    setSelected(false)
-    setCollective(collectiveInitialValue)
-    setValue(initialValue)
   }
 
   function onSet(e) {
@@ -398,7 +400,7 @@ function LessonsModal({ sectionData: {data, section}, lessonsModal, closeLessons
                     className="OSstyle"
                     name="count"
                   >
-                    {selectionOptions(9)}
+                    {selectionOptions(table.weekDaysCount * table.daysHours)}
                   </select>
             </label>
           </div>
@@ -479,7 +481,7 @@ function LessonsModal({ sectionData: {data, section}, lessonsModal, closeLessons
                     className="OSstyle"
                     name="count"
                   >
-                    {selectionOptions(9)}
+                    {selectionOptions(table.weekDaysCount * table.daysHours)}
                   </select>
             </label>
           </div>

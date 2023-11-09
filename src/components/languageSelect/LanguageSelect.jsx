@@ -1,5 +1,7 @@
+import { useSelector } from "react-redux";
 import { Modal } from "react-responsive-modal";
 import i18next from "i18next";
+import { useTranslation } from "react-i18next";
 import Flags from "country-flag-icons/react/3x2";
 import { useCookies } from 'react-cookie';
 import "./style.scss";
@@ -11,7 +13,14 @@ const flags = [
 ]
 
 function LanguageSelect({lngModal, closeLngModal}) {
+  const table = useSelector((state) => state.timeTable)
   let [cookies] = useCookies(['i18next']) || 'en'
+  
+  const { t } = useTranslation()
+
+  document.title = table.name ? 
+  table.name + '-' + t('timetable') : 
+  t('timetable')
 
   return (
     <Modal     

@@ -16,12 +16,12 @@ import PrintSettings from "../../components/printSettings/PrintSettings";
 import "./style.scss";
 
 let navItems = [
-  {icon: <AiOutlinePrinter className="icon" />, linkClass: 'main-navbar__item', text: 'print'},
+  {icon: <GiGreekTemple className="icon" />, linkClass: 'main-navbar__item', text: 'school',},
   {icon: <PiNotebook className="icon" />, linkClass: 'main-navbar__item', text: 'subjects'},
+  {icon: <FaGraduationCap className="icon" />, linkClass: 'main-navbar__item', text: 'teachers'},
   {icon: <BsPeople className="icon" />, linkClass: 'main-navbar__item', text: 'classes',},
   {icon: <BsFillDoorOpenFill className="icon" />, linkClass: 'main-navbar__item', text: 'classrooms',},
-  {icon: <FaGraduationCap className="icon" />, linkClass: 'main-navbar__item', text: 'teachers'},
-  {icon: <GiGreekTemple className="icon" />, linkClass: 'main-navbar__item', text: 'school',},
+  {icon: <AiOutlinePrinter className="icon" />, linkClass: 'main-navbar__item', text: 'print'},
 ]
 
 function Main() {

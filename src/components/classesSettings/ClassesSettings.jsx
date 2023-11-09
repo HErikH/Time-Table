@@ -87,9 +87,11 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
   }
 
   function onClose(name) {
+    if (name != 'error') {
+      setValue(initialValue)
+      setSelected(false)
+    }
     setModal({ ...modal, [name]: false });
-    setSelected(false);
-    setValue(initialValue);
   }
 
   function onSet(e) {

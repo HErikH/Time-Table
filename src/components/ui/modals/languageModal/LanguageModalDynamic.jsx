@@ -6,7 +6,7 @@ import { useCookies } from 'react-cookie';
 import './style.scss'
 
 function LanguageModalDynamic() {
-  const [cursorPosition, setCursorPosition] = useState({ top: '10px', right: '10px' });
+  const [cursorPosition, setCursorPosition] = useState({ top: '10px', right: '15px' });
   let [modal, setModal] = useState({lng: false})
 
   let [cookies] = useCookies(['i18next']) || 'en'

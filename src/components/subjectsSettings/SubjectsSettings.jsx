@@ -87,9 +87,11 @@ function SubjectsSettings({ subjectsModal, closeSubjectsModal }) {
 
   function onClose(name) {
     name = name.toLowerCase();
+    if (name != 'error') {
+      setValue(initialValue)
+      setSelected(false)
+    }
     setModal({ ...modal, [name]: false });
-    setSelected(false)
-    setValue(initialValue)
   }
 
   function onSet(e) {

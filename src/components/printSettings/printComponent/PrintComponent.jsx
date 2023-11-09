@@ -6,7 +6,7 @@ import "./style.scss";
 
 function PrintComponent({ lessonsData, section }) {
   const { printRef, handlePrint, setDocumentTitle } = useContext(PrintContext);
-  const table = useSelector((state) => state.timeTable.weekDays);
+  const table = useSelector((state) => state.timeTable);
   const lessons = useSelector((state) => state.lessons);
   const subjects = useSelector((state) => state.subjects);
   const teachers = useSelector((state) => state.teachers);
@@ -17,34 +17,40 @@ function PrintComponent({ lessonsData, section }) {
 
   useEffect(() => {
     section == 'classes' ? 
-    setDocumentTitle(t('class timetable')+ ':' + ' ' + (lessonsData ? lessonsData.longName : '')) :
+    setDocumentTitle((table.name ? table.name : '') + '_' + (lessonsData ? lessonsData.longName : '') + '_' + t('class timetable')) :
     section == 'teachers' ?
-    setDocumentTitle(t('teacher timetable')+ ':' + ' ' + (lessonsData ? lessonsData.name : '')) :
+    setDocumentTitle((table.name ? table.name : '') + '_' + (lessonsData ? lessonsData.name : '') + '_' + t('teacher timetable')) :
     ''
   }, [section, lessonsData])
 
   return (
     <>
       <div ref={printRef}>
-        <h3 style={{textAlign: 'center'}}>
+        <h4 style={{textAlign: 'center'}}>
+          {t('school') + ':' + ' ' + (table.name ? table.name : '')}
+        </h4>
+        <h4 style={{textAlign: 'center'}}>
+          {t('academic year') + ':' + ' ' + (table.year ? table.year : '')}
+        </h4>
+        <h4 style={{textAlign: 'center'}}>
         {
         section == 'classes' ?
-        t('class name')+ ':' + ' ' + (lessonsData ? lessonsData.longName : '') :
+        t('class name') + ':' + ' ' + (lessonsData ? lessonsData.longName : '') :
         section == 'teachers' ?
-        t('teacher')+ ':' + ' ' + (lessonsData ? lessonsData.name : '') : ''
+        t('teacher') + ':' + ' ' + (lessonsData ? lessonsData.name : '') : ''
         }
-        </h3>
+        </h4>
         <h5 style={{textAlign: 'center'}}>
         {
         section == 'classes' &&
-        t('class supervisor')+ ':' + ' ' + (lessonsData ? teachers[Object.keys(lessonsData.classSupervisors)[0]]?.name : '')
+        t('class supervisor') + ':' + ' ' + (lessonsData ? teachers[Object.keys(lessonsData.classSupervisors)[0]]?.name : '')
         }
         </h5>
         <table className="print-timetable">
           <thead>
             <tr>
               <th></th>
-              {Object.entries(table["1"].hours).map((hour) => {
+              {table.weekDays && Object.entries(table.weekDays["1"].hours).map((hour) => {
                 return (
                   <th key={hour[0]}>
                     <p>{hour[1].shortName}</p>
@@ -55,7 +61,7 @@ function PrintComponent({ lessonsData, section }) {
             </tr>
           </thead>
           <tbody>
-            {Object.entries(table).map((day) => {
+            {table.weekDays && Object.entries(table.weekDays).map((day) => {
               return (
                 <tr key={day[0]}>
                   <td style={{textAlign: 'center'}}>{day[1].shortName}</td>

@@ -122,7 +122,9 @@ function SchoolSettings({ schoolModal, closeSchoolModal }) {
   function onSet(e) {
     setValue((prev) => {
       if (!e.target.dataset.location) {
-        prev[e.target.name] = isNaN(Number(e.target.value)) ? e.target.value : Number(e.target.value)
+        prev[e.target.name] = !/\S/.test(e.target.value) || isNaN(Number(e.target.value)) ? 
+        e.target.value : 
+        Number(e.target.value)
         return
       }
 

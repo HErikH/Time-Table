@@ -36,7 +36,7 @@ function LessonsStack({ setAvailable, lessonPeriod }) {
     let result = [];
 
     for (const key in stacks) {
-      result.push(
+      Object.keys(stacks[key].content).length && result.push(
         <div 
         className="stack" 
         key={stacks[key].id}

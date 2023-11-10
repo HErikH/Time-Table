@@ -58,7 +58,7 @@ const dragDropSlice = createSlice({
     changeFooterStacks(state, { payload }) {
       let next = {};
       let { lessons, subjects, teachers, classes, classrooms } = structuredClone(payload);
-
+      
       for (const key in lessons) {
         let unIdStack = lessons[key].lessonId;
         next["footerStack" + unIdStack] = { 
@@ -82,9 +82,13 @@ const dragDropSlice = createSlice({
           };
         }
       }
-      
+
       state.stacks = next
     },
+
+    setError(state, { payload }) {
+      state.error = payload
+    }
   },
 
   extraReducers: (builder) => {
@@ -98,5 +102,5 @@ const dragDropSlice = createSlice({
   },
 });
 
-export const { changeFooterStacks } = dragDropSlice.actions;
+export const { changeFooterStacks, setError } = dragDropSlice.actions;
 export default dragDropSlice.reducer;

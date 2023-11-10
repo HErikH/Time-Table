@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux/es/exports";
+import { useSelector, useDispatch } from "react-redux/es/exports";
+import { setError } from "../../../../features/dragDropSlice";
 import Modal from "react-responsive-modal";
 import { useTranslation } from "react-i18next";
 import "react-responsive-modal/styles.css";
@@ -11,6 +12,7 @@ function ErrorModal() {
   const teachers = useSelector(state => state.teachers)
   const [modal, setModal] = useState(false)
   const [errorData, setErrorData] = useState(false)
+  const dispatch = useDispatch()
 
   let { t } = useTranslation();
 
@@ -29,7 +31,10 @@ function ErrorModal() {
     <Modal
     classNames={{ modal: "error-modal" }}
     open={modal}
-    onClose={() => {setModal(false), putError = false}}
+    onClose={() => {
+      setModal(false), 
+      dispatch(setError(false))
+    }}
     center
     >
         {putError ?

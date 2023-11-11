@@ -34,11 +34,18 @@ function Timetable({ available, setLessonPeriod }) {
   }
 
   function createWeekDays() {
+    let days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday']
     let result = [];
 
     for (const item in table) {
       result.push(
-        <th key={table[item].dayId}>{t(table[item].name.toLowerCase())}</th>
+        <th key={table[item].dayId}>
+          {
+            days.includes(table[item].name) ?
+            t(table[item].name.toLowerCase()) :
+            table[item].name
+          }
+        </th>
       );
     }
 

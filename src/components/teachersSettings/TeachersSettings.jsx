@@ -23,7 +23,7 @@ let buttonData = [
     text: "New",
   },
   {
-    icon: <FaGraduationCap style={{ fill: "#213458" }} />,
+    icon: <FaGraduationCap style={{ fill: "#EDC369" }} />,
     className: "OSstyle",
     text: "Edit",
   },

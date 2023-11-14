@@ -33,7 +33,7 @@
     font-size: 0.9em;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
     thead tr {
-        background-color: #009879;
+        background-color: #213458;
         color: #ffffff;
         text-align: left;
     }
@@ -49,6 +49,7 @@
         text-align: center;
     }
 }
+
 // Global styles
 
 * {
@@ -60,16 +61,29 @@
 }
 
 .OSstyle {
-    height: 30px;
-    border: 1px solid #707070;
-    border-radius: 3px;
-    padding: 0 1rem 0 1rem;
-    background: linear-gradient(to bottom, #f2f2f2 0%, #ebebeb 42%, #dddddd 47%, #cfcfcf 100%);
-    transition: all 0.1s ease-in;
-    cursor: pointer;
-    &:hover {
-        background: #eaf6fd;
-        background: linear-gradient(to bottom, #eaf6fd 0%, #d9f0fc 42%, #bee6fd 47%, #bce5fc 58%, #a7d9f5 100%);
+      height: 30px;
+      border-radius: 3px;
+      padding: 0 1rem 0 1rem;
+      color: #213458;
+      background: transparent;
+      transition: ease-out 0.5s;
+      border: 1px solid #213458;
+      border-radius: 3px;
+      box-shadow: inset 0 0 0 0 #213458;
+      cursor: pointer;
+      &:hover {
+        color: white;
+        box-shadow: inset 0 -100px 0 0 #213458;
+      }
+      &:active {
+        transform: scale(0.9);
+      }
+}
+
+select {
+    option {
+        color: white;
+        background-color: #213458;
     }
 }
 

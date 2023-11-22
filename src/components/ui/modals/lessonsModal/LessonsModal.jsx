@@ -343,7 +343,7 @@ function LessonsModal({ sectionData: {data, section}, lessonsModal, closeLessons
       >
         <div className="container">
           <div className="selection-block">
-              <label>
+              <span>
                 {t("teacher")}
                   <select
                     value={value.teacher}
@@ -355,8 +355,8 @@ function LessonsModal({ sectionData: {data, section}, lessonsModal, closeLessons
                     <option value=""></option>
                     {selectionOptions(Object.values(teachers))}
                   </select>
-              </label>
-            <label>
+              </span>
+            <span>
               {t("subject")}
                   <select
                     value={value.subject}
@@ -367,8 +367,8 @@ function LessonsModal({ sectionData: {data, section}, lessonsModal, closeLessons
                     <option value=""></option>
                     {selectionOptions(Object.values(subjects))}
                   </select>
-            </label>
-            <label>
+            </span>
+            <span>
               {t("class")}
                   <select
                     value={value.class}
@@ -379,8 +379,8 @@ function LessonsModal({ sectionData: {data, section}, lessonsModal, closeLessons
                     <option value=""></option>
                     {selectionOptions(Object.values(classes))}
                   </select>
-            </label>
-            <label>
+            </span>
+            <span>
               {t("classroom name")}
                   <select
                     value={value.classroom}
@@ -391,8 +391,8 @@ function LessonsModal({ sectionData: {data, section}, lessonsModal, closeLessons
                     <option value=""></option>
                     {selectionOptions(Object.values(classrooms))}
                   </select>
-            </label>
-            <label>
+            </span>
+            <span>
               {t("lessons/week")}
                   <select
                     value={value.count}
@@ -402,7 +402,7 @@ function LessonsModal({ sectionData: {data, section}, lessonsModal, closeLessons
                   >
                     {selectionOptions(table.weekDaysCount * table.daysHours)}
                   </select>
-            </label>
+            </span>
           </div>
 
           <div className="button-block">
@@ -424,7 +424,7 @@ function LessonsModal({ sectionData: {data, section}, lessonsModal, closeLessons
       >
         <div className="container">
         <div className="selection-block">
-              <label>
+              <span>
                 {t("teacher")}
                   <select
                     value={value.teacher}
@@ -436,8 +436,8 @@ function LessonsModal({ sectionData: {data, section}, lessonsModal, closeLessons
                     <option value=""></option>
                     {selectionOptions(Object.values(teachers))}
                   </select>
-              </label>
-            <label>
+              </span>
+            <span>
                 {t("subject")}
                   <select
                     value={value.subject}
@@ -448,8 +448,8 @@ function LessonsModal({ sectionData: {data, section}, lessonsModal, closeLessons
                     <option value=""></option>
                     {selectionOptions(Object.values(subjects))}
                   </select>
-            </label>
-            <label>
+            </span>
+            <span>
                 {t("class")}
                   <select
                     value={value.class}
@@ -460,8 +460,8 @@ function LessonsModal({ sectionData: {data, section}, lessonsModal, closeLessons
                     <option value=""></option>
                     {selectionOptions(Object.values(classes))}
                   </select>
-            </label>
-            <label>
+            </span>
+            <span>
               {t("classroom name")}
                   <select
                     value={value.classroom}
@@ -472,8 +472,8 @@ function LessonsModal({ sectionData: {data, section}, lessonsModal, closeLessons
                     <option value=""></option>
                     {selectionOptions(Object.values(classrooms))}
                   </select>
-            </label>
-            <label>
+            </span>
+            <span>
                 {t("lessons/week")}
                   <select
                     value={value.count}
@@ -483,7 +483,7 @@ function LessonsModal({ sectionData: {data, section}, lessonsModal, closeLessons
                   >
                     {selectionOptions(table.weekDaysCount * table.daysHours)}
                   </select>
-            </label>
+            </span>
           </div>
 
           <div className="button-block">

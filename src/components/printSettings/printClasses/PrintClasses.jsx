@@ -26,7 +26,7 @@ function PrintClasses({ printClassesModal, closePrintClassesModal}) {
     onClose={() => closePrintClassesModal('classes')}
     center
     >
-    <label className="class-select">
+    <span className="class-select">
         {t('classes')}:
         <select className="OSstyle" value={selectValue} onChange={onSet}>
         {Object.entries(classes).map((item) => {
@@ -37,7 +37,7 @@ function PrintClasses({ printClassesModal, closePrintClassesModal}) {
           )
         })}
         </select>
-    </label>
+    </span>
     <PrintComponent lessonsData={selected} section='classes'/>
     </Modal>
   )

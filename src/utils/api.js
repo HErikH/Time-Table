@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
 import axios from "axios";
-const BASE_URL = "http://localhost:4000/";
-// const BASE_URL = "https://time-table-h6xp.onrender.com/"
+// const BASE_URL = "http://localhost:4000/";
+const BASE_URL = "https://time-table-h6xp.onrender.com/"
 
 export default async function fetchDataFromApi(url, params, method) {
   let uid = Cookies.get("uid");

@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, current, isAnyOf } from "@reduxjs/toolkit";
 import fetchDataFromApi from "../utils/api.js";
 
 let initialState = {};
@@ -78,18 +78,12 @@ const lessonsSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getLessons.fulfilled, (_, { payload }) => {
-      return payload;
-    });
-    builder.addCase(addLesson.fulfilled, (_, { payload }) => {
-      return payload;
-    });
-    builder.addCase(editLesson.fulfilled, (_, { payload }) => {
-      return payload;
-    });
-    builder.addCase(deleteLesson.fulfilled, (_, { payload }) => {
-      return payload;
-    });
+    builder.addMatcher(isAnyOf(
+      getLessons.fulfilled,
+      addLesson.fulfilled,
+      editLesson.fulfilled,
+      deleteLesson.fulfilled
+    ), (_, { payload }) => payload)
   },
 });
 

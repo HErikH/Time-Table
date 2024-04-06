@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, current, isAnyOf } from "@reduxjs/toolkit";
 import fetchDataFromApi from "../utils/api.js";
 
 let initialState = {
@@ -80,14 +80,12 @@ const timeTableSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchTable.fulfilled, (_, { payload }) => {
-      payload.weekDays = JSON.parse(payload.weekDays);
-      return payload;
-    });
-    builder.addCase(updateTable.fulfilled, (_, { payload }) => {
-      payload.weekDays = JSON.parse(payload.weekDays);
-      return payload;
-    });
+    builder.addMatcher(isAnyOf(fetchTable.fulfilled, updateTable.fulfilled), (_, { payload }) => {
+      return {
+        ...payload,
+        weekDays: JSON.parse(payload.weekDays)
+      };
+    })
   },
 });
 

@@ -1,6 +1,6 @@
 import Cookies from "js-cookie";
 import axios from "axios";
-const BASE_URL = "http://localhost:4000/";
+const BASE_URL = import.meta.env.VITE_FETCH_URL;
 // const BASE_URL = "https://time-table-h6xp.onrender.com/"
 
 export default async function fetchDataFromApi(url, params, method) {

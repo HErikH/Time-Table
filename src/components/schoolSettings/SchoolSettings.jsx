@@ -14,29 +14,18 @@ import "./style.scss";
 function selectionOptions(info) {
   let result = [];
 
-  // if (Array.isArray(info)) {
-  //   return info.map(item => {
-  //       return <option key={item} value={item}>{item}</option>;
-  //   })
-  // }
-
-  if (info == 55) {
-    for (let i = 0; i <= info; i+=5) {
-      result.push(<option key={i} value={i}>{i}</option>);
-    }
-    return result
+  if (Array.isArray(info)) {
+    return info.map(item => {
+        return <option key={item} value={item}>{item}</option>;
+    })
   }
 
-  if (info == 23) {
-    for (let i = 0; i <= info; i++) {
-      result.push(<option key={i} value={i}>{i}</option>);
-    }
-    return result
-  }
+  const startIndex = [55, 23].includes(info) ? 0 : 1;
+  const step = info === 55 ? 5 : 1;
 
-  for (let i = 1; i <= info; i++) {
+  for (let i = startIndex; i <= info; i += step) {
     result.push(<option key={i} value={i}>{i}</option>);
-  }
+  }  
 
   return result;
 }

@@ -82,17 +82,13 @@ function TeachersSettings({ teachersModal, closeTeachersModal }) {
 
   function onOpen(name) {
     name = name.toLowerCase();
-    if (name == "edit") {
-      setValue((prev) => {
-        prev.name = selected[1].name;
-        prev.lastName = selected[1].lastName;
-        prev.shortName = selected[1].shortName;
-        prev.phone = selected[1].phone;
-        // prev.color = '#' + rgbHex(selected[1].color)
-        prev.gender = selected[1].gender;
-        prev.email = selected[1].email;
-        prev.supervisor = classes?.[Object.keys(selected[1].classIdWhoesSupervisor)[0]]?.longName
-        prev.classIdWhoesSupervisor = { [Object.keys(selected[1].classIdWhoesSupervisor)[0]]: Object.keys(selected[1].classIdWhoesSupervisor)[0] }
+    if (name == "edit") { 
+      setValue(() => {
+        return {
+          ...selected[1],
+          supervisor: classes?.[Object.keys(selected[1].classIdWhoesSupervisor)[0]]?.longName,
+          classIdWhoesSupervisor: { [Object.keys(selected[1].classIdWhoesSupervisor)[0]]: Object.keys(selected[1].classIdWhoesSupervisor)[0] }
+        }
       });
     }
     setModal({ ...modal, [name]: true });

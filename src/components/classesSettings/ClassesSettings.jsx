@@ -76,12 +76,13 @@ function ClassesSettings({ classesModal, closeClassesModal }) {
   function onOpen(name) {
     name = name.toLowerCase()
     if (name == "edit") {
-      setValue((prev) => {
-        prev.longName = selected[1].longName;
-        prev.shortName = selected[1].shortName;
-        prev.supervisor = teachers?.[Object.keys(selected[1].classSupervisors)[0]]?.name
-        prev.classSupervisors = { [Object.keys(selected[1].classSupervisors)[0]]: Object.keys(selected[1].classSupervisors)[0] };
-      });
+      setValue(() => {
+        return {
+          ...selected[1],
+          supervisor: teachers?.[Object.keys(selected[1].classSupervisors)[0]]?.name,
+          classSupervisors: { [Object.keys(selected[1].classSupervisors)[0]]: Object.keys(selected[1].classSupervisors)[0] }
+        }
+     })
     }
     setModal({ ...modal, [name]: true });
   }
